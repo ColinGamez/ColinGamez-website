@@ -2,11 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { getImage } from 'astro:assets';
 
 // Import config for personal info
 const config = await import('../../data/config.json');
 const personalInfo = config.default.personalInfo;
 const socialLinks = config.default.socialLinks;
+
+// Use base for image path
+const baseUrl = import.meta.env.BASE_URL;
+const avatarPath = `${baseUrl}colin-avatar.jpg`;
 ---
 
 <Layout title="Colin - Developer & Content Creator">
@@ -18,7 +23,7 @@ const socialLinks = config.default.socialLinks;
       <div class="max-w-4xl mx-auto text-center">
         <div class="mb-8">
           <img
-            src={personalInfo.photo}
+            src={avatarPath}
             alt="Colin's photo"
             class="w-36 h-36 rounded-full mx-auto mb-8 shadow-2xl border-4 border-primary-500/20 tech-glow hover:scale-110 transition-transform duration-300"
             loading="eager"
