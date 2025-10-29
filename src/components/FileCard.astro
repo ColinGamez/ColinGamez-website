@@ -1,0 +1,66 @@
+---
+interface Props {
+  name: string;
+  size: string;
+  description: string;
+  downloadUrl: string;
+  fileCount?: number;
+}
+
+const { name, size, description, downloadUrl, fileCount } = Astro.props;
+
+function formatFileSize(bytes: number): string {
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return '0 B';
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Convert size string to bytes for proper formatting
+const sizeInBytes = parseInt(size);
+const formattedSize = isNaN(sizeInBytes) ? size : formatFileSize(sizeInBytes);
+---
+
+<div class="card p-6">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0">
+          <svg class="w-8 h-8 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{name}</h3>
+          <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <span>{formattedSize}</span>
+            {fileCount && (
+              <>
+                <span>•</span>
+                <span>{fileCount} {fileCount === 1 ? 'file' : 'files'}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      <p class="mt-3 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+        {description}
+      </p>
+    </div>
+    
+    <div class="ml-4 flex-shrink-0">
+      <a
+        href={downloadUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary inline-flex items-center space-x-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Download</span>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,145 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import FileCard from '../components/FileCard.astro';
+
+// Import downloads manifest
+let downloads: any[] = [];
+let error = '';
+let totalSize = 0;
+let totalFiles = 0;
+
+try {
+  const downloadsData = await import('../../data/downloads.json');
+  downloads = downloadsData.default.downloads;
+  
+  // Calculate totals
+  totalFiles = downloads.reduce((acc, download) => {
+    return acc + (download.fileCount || 1);
+  }, 0);
+  
+  totalSize = downloads.reduce((acc, download) => {
+    const sizeInBytes = parseInt(download.size);
+    return acc + (isNaN(sizeInBytes) ? 0 : sizeInBytes);
+  }, 0);
+} catch (e) {
+  error = 'Failed to load downloads manifest';
+  console.error('Error loading downloads:', e);
+}
+
+function formatFileSize(bytes: number): string {
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return '0 B';
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+}
+---
+
+<Layout title="Downloads - Colin" description="Download tools, assets, and resources created by Colin">
+  <Navbar />
+  
+  <main>
+    <!-- Header Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gaming-50 dark:from-gray-900 dark:to-gaming-900/20">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center">
+          <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            <span class="neon-text">Downloads</span>
+          </h1>
+          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+            Tools, assets, and resources I've created for the community. Everything is free to download and use.
+          </p>
+          
+          {downloads.length > 0 && (
+            <div class="flex flex-wrap justify-center gap-8 text-sm text-gray-500 dark:text-gray-400">
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <span>{totalFiles} files available</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                </svg>
+                <span>{formatFileSize(totalSize)} total size</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>Hosted securely</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Downloads Grid -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto">
+        {error && (
+          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-8">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+              <p class="text-red-700 dark:text-red-400">
+                {error}. Please check back later.
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {downloads.length > 0 && (
+          <div class="grid gap-6 lg:grid-cols-2">
+            {downloads.map(download => (
+              <FileCard
+                name={download.name}
+                size={download.size}
+                description={download.description}
+                downloadUrl={download.downloadUrl}
+                fileCount={download.fileCount}
+              />
+            ))}
+          </div>
+        )}
+        
+        {downloads.length === 0 && !error && (
+          <div class="text-center py-12">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No downloads available
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Check back later for new releases!
+            </p>
+          </div>
+        )}
+        
+        <!-- Instructions Section -->
+        {downloads.length > 0 && (
+          <div class="mt-16 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-8">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              Download Instructions
+            </h2>
+            <div class="prose dark:prose-invert max-w-none">
+              <ul class="text-gray-600 dark:text-gray-300 space-y-2">
+                <li>All downloads are hosted on secure cloud storage (Cloudflare R2 / Backblaze B2)</li>
+                <li>Files are regularly scanned for security and integrity</li>
+                <li>Large files may take a few moments to start downloading</li>
+                <li>If you experience any issues, please reach out via my social links</li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

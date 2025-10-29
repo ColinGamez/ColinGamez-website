@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import RepoCard from '../components/RepoCard.astro';
+
+// Import config for GitHub username
+const config = await import('../../data/config.json');
+const githubUsername = config.default.github.username;
+
+// Fetch GitHub repositories
+let repositories: any[] = [];
+let error = '';
+
+try {
+  const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=50`);
+  
+  if (response.ok) {
+    const repos = await response.json();
+    // Filter out forks and private repos, sort by stars
+    repositories = repos
+      .filter((repo: any) => !repo.fork && !repo.private)
+      .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count);
+  } else {
+    error = `GitHub API Error: ${response.status}`;
+  }
+} catch (e) {
+  error = 'Failed to fetch repositories';
+  console.error('Error fetching repositories:', e);
+}
+---
+
+<Layout title="Projects - Colin" description="Explore Colin's open source projects and GitHub repositories">
+  <Navbar />
+  
+  <main>
+    <!-- Header Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center">
+          <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            My <span class="neon-text">Projects</span>
+          </h1>
+          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+            A collection of my open source projects, experiments, and contributions on GitHub.
+          </p>
+        </div>
+        
+        {repositories.length > 0 && (
+          <div class="mt-8 flex justify-center">
+            <a
+              href={`https://github.com/${githubUsername}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-primary inline-flex items-center space-x-3 text-lg"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd" />
+              </svg>
+              <span>View all on GitHub</span>
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+    
+    <!-- Projects Grid -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+      <div class="max-w-6xl mx-auto">
+        {error && (
+          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-8">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+              <p class="text-red-700 dark:text-red-400">
+                {error}. Please check back later or visit my GitHub profile directly.
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {repositories.length > 0 && (
+          <>
+            <div class="mb-6 text-center">
+              <p class="text-gray-600 dark:text-gray-400">
+                Showing {repositories.length} public repositories
+              </p>
+            </div>
+            
+            <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {repositories.map(repo => (
+                <RepoCard
+                  name={repo.name}
+                  description={repo.description}
+                  url={repo.html_url}
+                  language={repo.language}
+                  stars={repo.stargazers_count}
+                  forks={repo.forks_count}
+                  updated={repo.updated_at}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        
+        {repositories.length === 0 && !error && (
+          <div class="text-center py-12">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7H3a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" />
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No repositories found
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Check back later for new projects!
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
