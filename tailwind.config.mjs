@@ -41,6 +41,14 @@ export default {
           700: '#a21caf',
           800: '#86198f',
           900: '#701a75',
+        },
+        regza: {
+          glow: '#9FDCFF',
+          glowdeep: '#2299DD',
+          bezel: '#0B0B0D',
+          edge: '#2A2D33',
+          silver: '#C9CED4',
+          dim: '#8E959C',
         }
       },
       fontFamily: {
