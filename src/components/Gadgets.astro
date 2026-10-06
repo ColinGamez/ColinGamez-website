@@ -1,36 +1,13 @@
 ---
 // Sidebar, 2009: the two Japan gadgets, recreated for the modern web.
-// The originals can't run anymore — both phoned home to web services that died
+// The originals can't run anymore  Eboth phoned home to web services that died
 // around 2007-2010 (hitsalive.com word feeds, minpaso.goga.co.jp rankings) and used
-// Vista Sidebar APIs. These recreations reuse their original local art and run
-// 100% locally. No remote calls, no tracking (the originals had urchin.js!).
+// Vista Sidebar APIs. The word cards + recordings below are the ORIGINAL Declan
+// Software assets, recovered from the Wayback Machine and used with permission.
+// Everything runs 100% locally. No remote calls, no tracking (the originals had urchin.js!).
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
-const mini = await import('../../data/minipaso.json');
-const workerUrl = mini.default.workerUrl;
-// Bundled fallback: same list the worker serves at /api/wotd/words.
-// Used when the worker is unreachable; update both together.
-const words = [
-  { k: 'こんにちは', r: 'konnichiwa', m: 'hello' },
-  { k: 'おはよう', r: 'ohayou', m: 'good morning' },
-  { k: 'こんばんは', r: 'konbanwa', m: 'good evening' },
-  { k: 'ありがとう', r: 'arigatou', m: 'thank you' },
-  { k: 'さくら', r: 'sakura', m: 'cherry blossom' },
-  { k: 'パソコン', r: 'pasokon', m: 'computer' },
-  { k: 'ゲーム', r: 'geemu', m: 'game' },
-  { k: 'すし', r: 'sushi', m: 'sushi' },
-  { k: 'くるま', r: 'kuruma', m: 'car' },
-  { k: 'でんしゃ', r: 'densha', m: 'train' },
-  { k: 'がくせい', r: 'gakusei', m: 'student' },
-  { k: 'せんせい', r: 'sensei', m: 'teacher' },
-  { k: 'ともだち', r: 'tomodachi', m: 'friend' },
-  { k: 'かぞく', r: 'kazoku', m: 'family' },
-  { k: 'あした', r: 'ashita', m: 'tomorrow' },
-  { k: 'そら', r: 'sora', m: 'sky' },
-  { k: 'みず', r: 'mizu', m: 'water' },
-  { k: 'ねこ', r: 'neko', m: 'cat' },
-  { k: 'たのしい', r: 'tanoshii', m: 'fun' },
-  { k: 'はじめる', r: 'hajimeru', m: 'to begin' },
-];
+const cardsData = await import('../../data/wotd-cards.json');
+const cards = cardsData.default;
 ---
 <section id="sidebar" class="py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
@@ -40,17 +17,22 @@ const words = [
       <div class="gadget">
         <div class="gadget-title"><img src={`${base}/aero/gadgets/wotd-icon.png`} alt="" width="32" height="32" class="w-8 h-8" /><span>Japanese Word of the Day</span></div>
         <div class="gadget-body">
-          <p id="wotd-kana" class="wotd-kana">{words[0].k}</p>
-          <p id="wotd-roma" class="wotd-roma">{words[0].r} — {words[0].m}</p>
-          <button id="wotd-next" class="gadget-btn">new word</button>
+          <img id="wotd-card" class="wotd-card" src={`${base}/aero/wotd/cards/${cards[0].id}.png`} alt="" width="150" />
+          <p id="wotd-roma" class="wotd-roma">{cards[0].roma}  E{cards[0].mean}</p>
+          <div class="wotd-btns">
+            <button id="wotd-play" class="gadget-btn hidden">play recording</button>
+            <button id="wotd-next" class="gadget-btn">new word</button>
+            <button id="wotd-quiz" class="gadget-btn">quiz: hide</button>
+          </div>
+          <audio id="wotd-audio" preload="none"></audio>
         </div>
-        <p class="gadget-credit">recreation of Declan Software's 2007 gadget · <a href="https://github.com/ColinGamez/Japanese-wotd" target="_blank" rel="noopener noreferrer">Windows app</a></p>
+        <p class="gadget-credit">Declan Software word cards + recordings, used with permission · <a href="https://github.com/ColinGamez/Japanese-wotd" target="_blank" rel="noopener noreferrer">Windows app</a></p>
       </div>
       <div class="gadget">
         <div class="gadget-title"><span>&#12415;&#12435;&#12394;&#12398;&#12497;&#12477;&#12467;&#12531;</span></div>
         <div class="gadget-body minpaso">
           <div class="minpaso-links"><span>&#28204;&#23450;</span><span>&#25237;&#31080;</span><a href={`${base}/minipaso/`}>&#12521;&#12531;&#12461;&#12531;&#12464;</a></div>
-          <p class="minpaso-note">The GOGA server is gone, so this one points at our own leaderboard — grab the Minipaso Windows app there to submit your scores.</p>
+          <p class="minpaso-note">The GOGA server is gone, so this one points at our own leaderboard  Egrab the Minipaso Windows app there to submit your scores.</p>
         </div>
         <p class="gadget-credit">recreation of GOGA's minpaso gadget</p>
       </div>
@@ -65,8 +47,10 @@ const words = [
   .gadget-title { display: flex; align-items: center; gap: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600;
     background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0.05)); border-bottom: 1px solid rgba(255,255,255,0.2); }
   .gadget-body { padding: 12px 14px; min-height: 118px; }
-  .wotd-kana { font-size: 30px; font-weight: 700; margin-bottom: 2px; text-shadow: 0 2px 6px rgba(0,0,0,0.5); }
-  .wotd-roma { font-size: 13px; opacity: 0.85; margin-bottom: 10px; }
+  .wotd-card { width: 150px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.4); background: #fff; }
+  .wotd-card.blurred { filter: blur(7px); }
+  .wotd-roma { font-size: 13px; opacity: 0.85; margin: 8px 0 10px; min-height: 18px; }
+  .wotd-btns { display: flex; gap: 6px; flex-wrap: wrap; }
   .gadget-btn { font-size: 12px; padding: 3px 14px; border-radius: 12px; color: #03395e;
     background: linear-gradient(to bottom, #fff, #C8F0FF); border: 1px solid rgba(255,255,255,0.9); }
   .gadget-btn:hover { filter: brightness(1.08); }
@@ -75,30 +59,44 @@ const words = [
   .minpaso-links a { color: #7fd4ff; }
   .minpaso-note { font-size: 12px; opacity: 0.8; }
 </style>
-<script define:vars={{ words, workerUrl }}>
-  const kana = document.getElementById('wotd-kana');
+<script define:vars={{ cards, base }}>
+  // Original Declan pack: one card per day, same day-index formula as before.
+  const card = document.getElementById('wotd-card');
   const roma = document.getElementById('wotd-roma');
-  let list = words;
-  // Same formula the worker uses for /api/wotd/today: one shared word per day.
+  const playBtn = document.getElementById('wotd-play');
+  const quizBtn = document.getElementById('wotd-quiz');
+  const audio = document.getElementById('wotd-audio');
+  const list = cards;
   let wi = Math.floor(Date.now() / 86400000) % list.length;
+  let quizHidden = false;
   function show() {
-    if (kana) kana.textContent = list[wi].k;
-    if (roma) roma.textContent = list[wi].r + ' — ' + list[wi].m;
+    const w = list[wi];
+    if (card) {
+      card.src = base + '/aero/wotd/cards/' + w.id + '.png';
+      card.alt = w.kanji + ' ' + w.kana + ' (' + w.roma + ') - ' + w.mean;
+      card.classList.toggle('blurred', quizHidden);
+    }
+    if (roma) roma.textContent = quizHidden ? '??? - press quiz to reveal' : w.roma + ' - ' + w.mean;
+    if (playBtn) playBtn.classList.toggle('hidden', !w.audio);
+    if (quizBtn) quizBtn.textContent = quizHidden ? 'quiz: reveal' : 'quiz: hide';
+    if (audio) { audio.pause(); audio.removeAttribute('src'); }
   }
   show();
   document.getElementById('wotd-next')?.addEventListener('click', () => {
     wi = (wi + 1) % list.length;
     show();
   });
-  // Prefer the live list so the app and the site never disagree.
-  fetch(workerUrl + '/api/wotd/words')
-    .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-    .then(remote => {
-      if (Array.isArray(remote) && remote.length > 0 && remote[0].k) {
-        list = remote;
-        wi = Math.floor(Date.now() / 86400000) % list.length;
-        show();
-      }
-    })
-    .catch(() => { /* bundled fallback already showing */ });
+  quizBtn?.addEventListener('click', () => {
+    quizHidden = !quizHidden;
+    show();
+  });
+  playBtn?.addEventListener('click', () => {
+    const w = list[wi];
+    if (!w.audio || !audio) return;
+    try {
+      audio.src = base + '/aero/wotd/audio/' + w.id + '.mp3';
+      audio.currentTime = 0;
+      audio.play()?.catch?.(() => {});
+    } catch {}
+  });
 </script>

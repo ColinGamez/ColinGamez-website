@@ -1,0 +1,22 @@
+[
+  { "id": "a11621z", "kanji": "面白い", "kana": "おもしろい", "roma": "omoshiroi", "mean": "interesting, funny, amusing", "audio": false },
+  { "id": "a14482a", "kanji": "バランス", "kana": "ばらんす", "roma": "baransu", "mean": "balance", "audio": false },
+  { "id": "a16513d", "kanji": "何人", "kana": "なんにん", "roma": "nannin", "mean": "how many people", "audio": false },
+  { "id": "a21364s", "kanji": "正", "kana": "せい", "roma": "sei", "mean": "(logical) true, regular", "audio": false },
+  { "id": "a23982k", "kanji": "兄", "kana": "あに", "roma": "ani", "mean": "older brother (one's own)", "audio": false },
+  { "id": "a25226g", "kanji": "水泳", "kana": "すいえい", "roma": "suiei", "mean": "swimming", "audio": false },
+  { "id": "a30500c", "kanji": "首相", "kana": "しゅしょう", "roma": "shushou", "mean": "Prime Minister", "audio": false },
+  { "id": "a31103h", "kanji": "西洋", "kana": "せいよう", "roma": "seiyou", "mean": "West, Western countries", "audio": false },
+  { "id": "a33982a", "kanji": "廃止", "kana": "はいし", "roma": "haishi", "mean": "repeal", "audio": false },
+  { "id": "a38666e", "kanji": "一種", "kana": "いっしゅ", "roma": "isshu", "mean": "a species, a kind, a variety", "audio": false },
+  { "id": "x10167b", "kanji": "用品", "kana": "ようひん", "roma": "youhin", "mean": "supplies, parts", "audio": false },
+  { "id": "x12022k", "kanji": "かく", "kana": "かく", "roma": "kaku", "mean": "to draw, to paint, to sketch, to depict, to describe", "audio": false },
+  { "id": "x12709v", "kanji": "読む", "kana": "よむ", "roma": "yomu", "mean": "to read", "audio": false },
+  { "id": "x14901d", "kanji": "介入", "kana": "かいにゅう", "roma": "kainyuu", "mean": "intervention", "audio": false },
+  { "id": "x15645t", "kanji": "審判", "kana": "しんぱん", "roma": "shinpan", "mean": "refereeing, trial, judgement, umpire, referee", "audio": false },
+  { "id": "x16269t", "kanji": "芝", "kana": "しば", "roma": "shiba", "mean": "sod, turf", "audio": false },
+  { "id": "x19904o", "kanji": "休業", "kana": "きゅうぎょう", "roma": "kyuugyou", "mean": "closed (e.g. store), business suspended, shutdown, holiday", "audio": false },
+  { "id": "x20761n", "kanji": "こちら", "kana": "こちら", "roma": "kochira", "mean": "this person; this direction, this side; thereafter", "audio": false },
+  { "id": "x28921j", "kanji": "卒業", "kana": "そつぎょう", "roma": "sotsugyou", "mean": "graduation", "audio": true },
+  { "id": "x68214q", "kanji": "矛盾", "kana": "むじゅん", "roma": "mujun", "mean": "contradiction, inconsistency", "audio": true }
+]
