@@ -1,0 +1,53 @@
+---
+// MSDN Library circa 2010 — white page, blue links, breadcrumb, tab strip.
+interface Props {
+  eyebrow: string;
+  title: string;
+  crumbs: { label: string; href: string }[];
+  description: string;
+  active: 'Home' | 'Projects' | 'Downloads';
+}
+const { eyebrow, title, crumbs, description, active } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const tabs = [
+  { label: 'Home', href: `${base}/` },
+  { label: 'Projects', href: `${base}/projects/` },
+  { label: 'Downloads', href: `${base}/downloads/` },
+];
+---
+<div class="msdn">
+  <div class="msdn-top"><span>ColinGamez Developer Network</span><span class="msdn-lib">MSDN Library</span></div>
+  <div class="msdn-main">
+    <p class="msdn-eyebrow">{eyebrow}</p>
+    <nav class="msdn-crumb" aria-label="Breadcrumb">
+      {crumbs.map((c, i) => (
+        <span>{i > 0 && ' > '}<a href={c.href}>{c.label}</a></span>
+      ))}
+    </nav>
+    <h1 class="msdn-title">{title}</h1>
+    <p class="msdn-desc">{description}</p>
+    <slot />
+  </div>
+  <div class="msdn-tabs">
+    {tabs.map(t => (
+      <a href={t.href} class={t.label === active ? 'active' : ''}>{t.label}</a>
+    ))}
+  </div>
+</div>
+<style>
+  .msdn { background: #fff; border: 1px solid #a9cfe8; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(2,136,209,0.3); font-family: 'Segoe UI', sans-serif; text-align: left; }
+  .msdn-top { display: flex; justify-content: space-between; padding: 6px 16px; font-size: 12px; color: #fff;
+    background: linear-gradient(to bottom, #2f7ab8, #0a3d6b); }
+  .msdn-lib { opacity: 0.85; }
+  .msdn-main { padding: 20px 24px 16px; background: linear-gradient(to bottom, #eaf4fd 0%, #fff 70%); }
+  .msdn-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: #1d6fae; margin-bottom: 6px; }
+  .msdn-crumb { font-size: 12px; color: #555; margin-bottom: 4px; }
+  .msdn-crumb a { color: #06c; text-decoration: none; }
+  .msdn-crumb a:hover { text-decoration: underline; }
+  .msdn-title { font-size: 2.5rem; font-weight: 700; color: #000; margin: 0 0 8px; }
+  .msdn-desc { font-size: 1.05rem; color: #333; max-width: 42rem; }
+  .msdn-tabs { display: flex; gap: 4px; padding: 8px 16px 0; background: #d9ecfa; border-top: 1px solid #a9cfe8; }
+  .msdn-tabs a { padding: 6px 20px; font-size: 13px; color: #0a3d6b; border: 1px solid transparent; border-bottom: none; border-radius: 6px 6px 0 0; text-decoration: none; }
+  .msdn-tabs a.active { background: #fff; border-color: #a9cfe8; font-weight: 600; }
+</style>

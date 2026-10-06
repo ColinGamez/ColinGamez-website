@@ -1,0 +1,24 @@
+---
+// OG dark13th Nanami Madobe cursors — the main (non-alternate) scheme.
+// Only .cur roles work in modern browsers; the .ani ones (busy, working,
+// move, resize) are IE-era and can't run on the web, so they're left out.
+// Every rule keeps a native fallback: if a browser rejects the .cur,
+// you just get the normal cursor.
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const cursors = {
+  arrow: `url(${base}/aero/cursors/nanami_arrow.cur)`,
+  link: `url(${base}/aero/cursors/nanami_link.cur)`,
+  help: `url(${base}/aero/cursors/nanami_helpsel.cur)`,
+};
+---
+<style define:vars={cursors}>
+  body, body a, body button {
+    cursor: var(--arrow), auto;
+  }
+  a, button, [role='button'], .nanami {
+    cursor: var(--link), pointer;
+  }
+  abbr[title] {
+    cursor: var(--help), help;
+  }
+</style>

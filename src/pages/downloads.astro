@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import FileCard from '../components/FileCard.astro';
+import MSDNHeader from '../components/MSDNHeader.astro';
+
+const _dbase = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0,-1) : import.meta.env.BASE_URL;
 
 // Import downloads manifest
 let downloads: any[] = [];
@@ -41,18 +44,17 @@ function formatFileSize(bytes: number): string {
   
   <main>
     <!-- Header Section -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gaming-50 dark:from-gray-900 dark:to-gaming-900/20">
+    <section class="py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={`background-image:url(${_dbase}/aero/aqua-2.jpg);background-size:cover;background-position:center`}>
       <div class="max-w-6xl mx-auto">
-        <div class="text-center">
-          <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            <span class="neon-text">Downloads</span>
-          </h1>
-          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-            Tools, assets, and resources I've created for the community. Everything is free to download and use.
-          </p>
-          
+        <MSDNHeader
+          eyebrow="COLINGAMEZ DEVELOPER NETWORK"
+          title="Downloads"
+          crumbs={[{ label: 'Home', href: `${_dbase}/` }, { label: 'Downloads', href: `${_dbase}/downloads/` }]}
+          description="Tools, assets, and resources I've created for the community. Everything is free to download and use."
+          active="Downloads"
+        >
           {downloads.length > 0 && (
-            <div class="flex flex-wrap justify-center gap-8 text-sm text-gray-500 dark:text-gray-400">
+            <div class="flex flex-wrap gap-8 text-sm text-sky-900/80 font-semibold mt-4">
               <div class="flex items-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -73,7 +75,7 @@ function formatFileSize(bytes: number): string {
               </div>
             </div>
           )}
-        </div>
+        </MSDNHeader>
       </div>
     </section>
     
@@ -112,27 +114,25 @@ function formatFileSize(bytes: number): string {
             <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No downloads available
+            <h3 class="text-xl font-semibold text-white mb-2" style="text-shadow:0 1px 4px rgba(1,87,155,0.8)">
+              Nothing here yet
             </h3>
-            <p class="text-gray-600 dark:text-gray-400">
-              Check back later for new releases!
+            <p class="text-white/85" style="text-shadow:0 1px 4px rgba(1,87,155,0.8)">
+              I haven't uploaded anything. Check back after I finish something.
             </p>
           </div>
         )}
         
         <!-- Instructions Section -->
         {downloads.length > 0 && (
-          <div class="mt-16 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-8">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Download Instructions
+          <div class="mt-16 aero-glass rounded-2xl p-8">
+            <h2 class="text-2xl font-semibold text-sky-900 mb-4">
+              Before you download
             </h2>
             <div class="prose dark:prose-invert max-w-none">
-              <ul class="text-gray-600 dark:text-gray-300 space-y-2">
-                <li>All downloads are hosted on secure cloud storage (Cloudflare R2 / Backblaze B2)</li>
-                <li>Files are regularly scanned for security and integrity</li>
-                <li>Large files may take a few moments to start downloading</li>
-                <li>If you experience any issues, please reach out via my social links</li>
+              <ul class="text-sky-900/75 space-y-2">
+                <li>Files are hosted on MEGA — big ones (the Ninjala pack is 3.4 GB) take a while, that's normal</li>
+                <li>If a link is dead, ping me on Discord or Twitter and I'll re-up it</li>
               </ul>
             </div>
           </div>

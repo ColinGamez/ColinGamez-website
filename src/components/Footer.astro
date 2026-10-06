@@ -4,22 +4,23 @@ const config = await import('../../data/config.json');
 const socialLinks = config.default.socialLinks;
 ---
 
-<footer class="bg-[#0B0B0D] border-t border-[#2A2D33]">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex flex-col md:flex-row justify-between items-center">
-      <div class="mb-4 md:mb-0">
-        <p class="text-gray-600 dark:text-gray-400 text-sm">
-          © {new Date().getFullYear()} Colin. Built with <a href="https://astro.build" class="text-primary-600 hover:text-primary-700">Astro</a> & <a href="https://tailwindcss.com" class="text-primary-600 hover:text-primary-700">Tailwind CSS</a>.
+<footer class="aero-taskbar mt-8">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="aero-glass px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="mb-4 md:mb-0 text-center md:text-left">
+        <p class="text-sky-900 text-sm">
+          © {new Date().getFullYear()} Colin. Built with <a href="https://astro.build" class="font-semibold underline">Astro</a> & <a href="https://tailwindcss.com" class="font-semibold underline">Tailwind CSS</a>.
         </p>
+        <p class="text-sky-700/70 text-xs mt-1">Nanami art: Madobe Nanami themepack (Microsoft Japan) &bull; Boot skin: dark13th &bull; @ aqua: Asadal stock</p>
       </div>
       
-      <div class="flex space-x-6">
+      <div class="flex space-x-4">
         {socialLinks.map(link => (
           <a
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-sky-800 bg-gradient-to-b from-white to-sky-200 border border-white shadow hover:scale-110 transition-transform duration-200"
             aria-label={link.name}
           >
             <span class="sr-only">{link.name}</span>

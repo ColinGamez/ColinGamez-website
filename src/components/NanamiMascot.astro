@@ -1,0 +1,52 @@
+---
+// SoraTan web recreation — V2 .sora is proprietary, so this widget mimics her:
+// Nanami art (Japan themepack wallpaper crop) + nanami.ogg voice + Sentence00-14 dialogue
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const lines = [
+  'Hi! I\'m Nanami! Welcome to Colin\'s site!',
+  'Colin codes web apps and plays games!',
+  'Check out his Projects page!',
+  'Downloads are free for everyone!',
+  'Frutiger Aero forever!',
+  'Did you see the @ aqua wallpapers?',
+  'I used to live in SoraTan.exe!',
+  'My voice is nanami.ogg!',
+  'Let\'s go! ColinGamez!',
+];
+---
+<div id="nanami" class="nanami" title="Click Nanami!">
+  <div id="nanami-bubble" class="nanami-bubble">Hi! I'm Nanami! Click me!</div>
+  <img src={`${base}/aero/nanami-2.jpg`} alt="Madobe Nanami" class="nanami-img" />
+  <audio id="nanami-audio" src={`${base}/aero/nanami-voice.ogg`} preload="none"></audio>
+</div>
+<style>
+  .nanami { position: fixed; right: 16px; bottom: 16px; z-index: 60; cursor: pointer; text-align: center; }
+  .nanami-img {
+    width: 96px; height: 96px; object-fit: cover; object-position: top;
+    border-radius: 50%; border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 0 0 2px #29B6F6, 0 8px 32px rgba(2,136,209,0.55), inset 0 2px 6px rgba(255,255,255,0.8);
+    transition: transform 0.2s;
+  }
+  .nanami:hover .nanami-img { transform: scale(1.08); }
+  .nanami-bubble {
+    max-width: 200px; margin: 0 auto 8px; padding: 8px 12px; font-size: 13px; color: #03395e;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(200,240,255,0.9));
+    border: 1px solid rgba(255,255,255,0.9); border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(2,136,209,0.35);
+  }
+</style>
+<script define:vars={{ lines }}>
+  const root = document.getElementById('nanami');
+  const bubble = document.getElementById('nanami-bubble');
+  const audio = document.getElementById('nanami-audio');
+  let i = 0;
+  root?.addEventListener('click', () => {
+    if (bubble) bubble.textContent = lines[i++ % lines.length];
+    // one sound only: restart the voice clip instead of stacking
+    try {
+      audio?.pause();
+      if (audio) audio.currentTime = 0;
+      audio?.play?.()?.catch?.(() => {});
+    } catch {}
+  });
+</script>

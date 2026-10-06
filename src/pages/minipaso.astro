@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import MSDNHeader from '../components/MSDNHeader.astro';
+
+const mini = await import('../../data/minipaso.json');
+const workerUrl = mini.default.workerUrl;
+const appRepo = mini.default.appRepo;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+---
+
+<Layout title="Minipaso rankings - Colin" description="Live Minipaso leaderboard: Windows Experience Index scores voted from the Minipaso app">
+  <Navbar />
+
+  <main>
+    <section class="py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={`background-image:url(${base}/aero/hero-aurora.jpg);background-size:cover;background-position:center`}>
+      <div class="max-w-6xl mx-auto relative">
+        <MSDNHeader
+          eyebrow="COLINGAMEZ DEVELOPER NETWORK"
+          title="Minipaso rankings"
+          crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Minipaso', href: `${base}/minipaso/` }]}
+          description="Everyone's PC, revived. Scores come from the Minipaso Windows app reading real WinSAT assessments."
+          active="Home"
+        >
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href={appRepo} target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center text-base">Get the Windows app</a>
+          </div>
+        </MSDNHeader>
+      </div>
+    </section>
+
+    <section class="py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto">
+        <div class="aero-glass px-6 py-6">
+          <h2 class="text-2xl font-bold text-sky-900 mb-1">Leaderboard</h2>
+          <p id="mp-status" class="text-sky-900/70 text-sm mb-4">Loading from the worker…</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-sky-900">
+              <thead>
+                <tr class="text-left border-b border-sky-200">
+                  <th class="py-2 pr-4">#</th><th class="py-2 pr-4">Nickname</th><th class="py-2 pr-4">PC</th>
+                  <th class="py-2 pr-4">Base</th><th class="py-2 pr-4">CPU</th><th class="py-2 pr-4">RAM</th>
+                  <th class="py-2 pr-4">GPU</th><th class="py-2 pr-4">Gaming</th><th class="py-2 pr-4">Disk</th>
+                </tr>
+              </thead>
+              <tbody id="mp-board"></tbody>
+            </table>
+          </div>
+          <p class="text-sky-900/60 text-xs mt-4">To appear here: run the Minipaso app on Windows, press Measure, pick a nickname, press Vote. Only scores, model and nickname are stored — no drive serials, ever.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script define:vars={{ workerUrl }}>
+  const board = document.getElementById('mp-board');
+  const status = document.getElementById('mp-status');
+  fetch(workerUrl + '/api/minipaso/ranking')
+    .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(rows => {
+      if (!Array.isArray(rows) || rows.length === 0) {
+        if (status) status.textContent = 'No votes yet — be the first. Grab the app above.';
+        return;
+      }
+      if (status) status.textContent = rows.length + ' vote(s), best first.';
+      if (!board) return;
+      rows.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-sky-100';
+        const cells = [String(i + 1), row.nick, row.model, row.system, row.cpu, row.memory, row.graphics, row.gaming, row.disk];
+        cells.forEach((c, j) => {
+          const td = document.createElement('td');
+          td.className = 'py-2 pr-4' + (j === 0 ? ' font-bold' : '');
+          td.textContent = (c === null || c === undefined || c === '') ? '—' : String(c);
+          tr.appendChild(td);
+        });
+        board.appendChild(tr);
+      });
+    })
+    .catch(() => {
+      if (status) status.textContent = 'Leaderboard is unreachable right now (worker offline?). The app still works — votes will land when it is back.';
+    });
+</script>

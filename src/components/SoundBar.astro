@@ -1,0 +1,58 @@
+---
+// Sample Music from the Win7 pack: Nana Mizuki 2010 single + off-vocal.
+// Titles are stored as numeric entities because the filenames are Shift-JIS-era Japanese.
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const tracks = [
+  { src: `${base}/aero/music/nana-mizuki-1.mp3`, title: '&#19971;&#33394;&#12472;&#12455;&#12493;&#12524;&#12540;&#12479; — Nana Mizuki' },
+  { src: `${base}/aero/music/nana-mizuki-2-offvocal.mp3`, title: '&#19971;&#33394;&#12472;&#12455;&#12493;&#12524;&#12540;&#12479; (off-vocal) — Nana Mizuki' },
+];
+---
+<div id="soundbar" class="soundbar aero-glass">
+  <button id="sb-play" aria-label="Play or pause music">&#9654;</button>
+  <span id="sb-title" set:html={tracks[0].title}></span>
+  <button id="sb-next" aria-label="Next track">&#9197;</button>
+  <audio id="sb-audio" preload="none"></audio>
+</div>
+<style>
+  .soundbar {
+    position: fixed; left: 16px; bottom: 16px; z-index: 60;
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; max-width: min(340px, 60vw);
+    font-size: 13px; color: #03395e; font-family: 'Segoe UI', sans-serif;
+  }
+  .soundbar button {
+    width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.9); color: #01579B;
+    background: linear-gradient(to bottom, #fff, #C8F0FF);
+    box-shadow: 0 2px 8px rgba(2,136,209,0.4);
+  }
+  .soundbar button:hover { filter: brightness(1.08); }
+  #sb-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+<script define:vars={{ tracks }}>
+  const audio = document.getElementById('sb-audio');
+  const playBtn = document.getElementById('sb-play');
+  const nextBtn = document.getElementById('sb-next');
+  const titleEl = document.getElementById('sb-title');
+  let ti = 0;
+  function load(i) {
+    ti = ((i % tracks.length) + tracks.length) % tracks.length;
+    if (audio) audio.src = tracks[ti].src;
+    if (titleEl) titleEl.innerHTML = tracks[ti].title;
+  }
+  playBtn?.addEventListener('click', () => {
+    if (!audio) return;
+    if (!audio.src) load(0);
+    if (audio.paused) { audio.play()?.catch?.(() => {}); if (playBtn) playBtn.innerHTML = '&#10074;&#10074;'; }
+    else { audio.pause(); if (playBtn) playBtn.innerHTML = '&#9654;'; }
+  });
+  nextBtn?.addEventListener('click', () => {
+    load(ti + 1);
+    audio?.play?.()?.catch?.(() => {});
+    if (playBtn) playBtn.innerHTML = '&#10074;&#10074;';
+  });
+  audio?.addEventListener('ended', () => {
+    load(ti + 1);
+    audio?.play?.()?.catch?.(() => {});
+  });
+</script>

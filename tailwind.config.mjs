@@ -49,6 +49,14 @@ export default {
           edge: '#2A2D33',
           silver: '#C9CED4',
           dim: '#8E959C',
+        },
+        aero: {
+          sky: '#1B9FE0',
+          deep: '#0B5FA5',
+          grass: '#5FBF3B',
+          aqua: '#7FDCF0',
+          glass: '#E8F7FF',
+          nanami: '#29B6F6',
         }
       },
       fontFamily: {

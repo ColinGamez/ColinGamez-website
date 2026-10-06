@@ -1,0 +1,104 @@
+---
+// Sidebar, 2009: the two Japan gadgets, recreated for the modern web.
+// The originals can't run anymore — both phoned home to web services that died
+// around 2007-2010 (hitsalive.com word feeds, minpaso.goga.co.jp rankings) and used
+// Vista Sidebar APIs. These recreations reuse their original local art and run
+// 100% locally. No remote calls, no tracking (the originals had urchin.js!).
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const mini = await import('../../data/minipaso.json');
+const workerUrl = mini.default.workerUrl;
+// Bundled fallback: same list the worker serves at /api/wotd/words.
+// Used when the worker is unreachable; update both together.
+const words = [
+  { k: 'こんにちは', r: 'konnichiwa', m: 'hello' },
+  { k: 'おはよう', r: 'ohayou', m: 'good morning' },
+  { k: 'こんばんは', r: 'konbanwa', m: 'good evening' },
+  { k: 'ありがとう', r: 'arigatou', m: 'thank you' },
+  { k: 'さくら', r: 'sakura', m: 'cherry blossom' },
+  { k: 'パソコン', r: 'pasokon', m: 'computer' },
+  { k: 'ゲーム', r: 'geemu', m: 'game' },
+  { k: 'すし', r: 'sushi', m: 'sushi' },
+  { k: 'くるま', r: 'kuruma', m: 'car' },
+  { k: 'でんしゃ', r: 'densha', m: 'train' },
+  { k: 'がくせい', r: 'gakusei', m: 'student' },
+  { k: 'せんせい', r: 'sensei', m: 'teacher' },
+  { k: 'ともだち', r: 'tomodachi', m: 'friend' },
+  { k: 'かぞく', r: 'kazoku', m: 'family' },
+  { k: 'あした', r: 'ashita', m: 'tomorrow' },
+  { k: 'そら', r: 'sora', m: 'sky' },
+  { k: 'みず', r: 'mizu', m: 'water' },
+  { k: 'ねこ', r: 'neko', m: 'cat' },
+  { k: 'たのしい', r: 'tanoshii', m: 'fun' },
+  { k: 'はじめる', r: 'hajimeru', m: 'to begin' },
+];
+---
+<section class="py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold text-white mb-1" style="text-shadow:0 2px 8px rgba(1,87,155,0.9)">Sidebar, 2009</h2>
+    <p class="text-white/75 text-sm mb-5" style="text-shadow:0 1px 4px rgba(1,87,155,0.8)">Two Japan gadgets from the pack, rebuilt to run without their dead servers. Original art, local words.</p>
+    <div class="grid sm:grid-cols-2 gap-6 max-w-3xl">
+      <div class="gadget">
+        <div class="gadget-title"><img src={`${base}/aero/gadgets/wotd-icon.png`} alt="" width="32" height="32" class="w-8 h-8" /><span>Japanese Word of the Day</span></div>
+        <div class="gadget-body">
+          <p id="wotd-kana" class="wotd-kana">{words[0].k}</p>
+          <p id="wotd-roma" class="wotd-roma">{words[0].r} — {words[0].m}</p>
+          <button id="wotd-next" class="gadget-btn">new word</button>
+        </div>
+        <p class="gadget-credit">recreation of Declan Software's 2007 gadget · <a href="https://github.com/ColinGamez/Japanese-wotd" target="_blank" rel="noopener noreferrer">Windows app</a></p>
+      </div>
+      <div class="gadget">
+        <div class="gadget-title"><span>&#12415;&#12435;&#12394;&#12398;&#12497;&#12477;&#12467;&#12531;</span></div>
+        <div class="gadget-body minpaso">
+          <div class="minpaso-links"><span>&#28204;&#23450;</span><span>&#25237;&#31080;</span><a href={`${base}/minipaso/`}>&#12521;&#12531;&#12461;&#12531;&#12464;</a></div>
+          <p class="minpaso-note">The GOGA server is gone, so this one points at our own leaderboard — grab the Minipaso Windows app there to submit your scores.</p>
+        </div>
+        <p class="gadget-credit">recreation of GOGA's minpaso gadget</p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .gadget { width: 100%; max-width: 320px; border-radius: 10px; overflow: hidden; color: #fff;
+    background: linear-gradient(to bottom, rgba(60,70,80,0.92), rgba(20,26,32,0.94));
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 28px rgba(1,87,155,0.45), inset 0 1px 0 rgba(255,255,255,0.35); font-family: 'Segoe UI', sans-serif; }
+  .gadget-title { display: flex; align-items: center; gap: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0.05)); border-bottom: 1px solid rgba(255,255,255,0.2); }
+  .gadget-body { padding: 12px 14px; min-height: 118px; }
+  .wotd-kana { font-size: 30px; font-weight: 700; margin-bottom: 2px; text-shadow: 0 2px 6px rgba(0,0,0,0.5); }
+  .wotd-roma { font-size: 13px; opacity: 0.85; margin-bottom: 10px; }
+  .gadget-btn { font-size: 12px; padding: 3px 14px; border-radius: 12px; color: #03395e;
+    background: linear-gradient(to bottom, #fff, #C8F0FF); border: 1px solid rgba(255,255,255,0.9); }
+  .gadget-btn:hover { filter: brightness(1.08); }
+  .gadget-credit { font-size: 10px; opacity: 0.55; padding: 4px 10px 6px; }
+  .minpaso-links { display: flex; gap: 16px; font-size: 14px; margin-bottom: 10px; }
+  .minpaso-links a { color: #7fd4ff; }
+  .minpaso-note { font-size: 12px; opacity: 0.8; }
+</style>
+<script define:vars={{ words, workerUrl }}>
+  const kana = document.getElementById('wotd-kana');
+  const roma = document.getElementById('wotd-roma');
+  let list = words;
+  // Same formula the worker uses for /api/wotd/today: one shared word per day.
+  let wi = Math.floor(Date.now() / 86400000) % list.length;
+  function show() {
+    if (kana) kana.textContent = list[wi].k;
+    if (roma) roma.textContent = list[wi].r + ' — ' + list[wi].m;
+  }
+  show();
+  document.getElementById('wotd-next')?.addEventListener('click', () => {
+    wi = (wi + 1) % list.length;
+    show();
+  });
+  // Prefer the live list so the app and the site never disagree.
+  fetch(workerUrl + '/api/wotd/words')
+    .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(remote => {
+      if (Array.isArray(remote) && remote.length > 0 && remote[0].k) {
+        list = remote;
+        wi = Math.floor(Date.now() / 86400000) % list.length;
+        show();
+      }
+    })
+    .catch(() => { /* bundled fallback already showing */ });
+</script>

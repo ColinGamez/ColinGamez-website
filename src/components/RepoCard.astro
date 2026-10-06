@@ -42,8 +42,8 @@ const formatDate = (dateString: string) => {
   <div class="flex items-start justify-between">
     <div class="flex-1 min-w-0">
       <div class="flex items-center space-x-2">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">
-          <a href={url} target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+        <h3 class="text-lg font-semibold text-sky-900 truncate">
+          <a href={url} target="_blank" rel="noopener noreferrer" class="hover:text-sky-600 transition-colors">
             {name}
           </a>
         </h3>
@@ -61,12 +61,12 @@ const formatDate = (dateString: string) => {
         </a>
       </div>
       
-      <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed">
+      <p class="mt-2 text-sky-900/70 text-sm line-clamp-2 leading-relaxed">
         {description || 'No description available'}
       </p>
       
       <div class="mt-4 flex items-center justify-between">
-        <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+        <div class="flex items-center space-x-4 text-sm text-sky-800/70">
           {language && (
             <div class="flex items-center space-x-1">
               <span
@@ -92,7 +92,7 @@ const formatDate = (dateString: string) => {
           </div>
         </div>
         
-        <span class="text-xs text-gray-400 dark:text-gray-500">
+        <span class="text-xs text-sky-700/60">
           Updated {formatDate(updated)}
         </span>
       </div>

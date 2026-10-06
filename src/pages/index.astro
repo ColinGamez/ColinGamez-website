@@ -2,7 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import { getImage } from 'astro:assets';
+import VS2010Window from '../components/VS2010Window.astro';
+import Gadgets from '../components/Gadgets.astro';
 
 // Import config for personal info
 const config = await import('../../data/config.json');
@@ -15,179 +16,145 @@ const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 const avatarPath = `${cleanBase}${personalInfo.photo}`;
 ---
 
-<Layout title="Colin - Developer & Content Creator">
+<Layout title="ColinGamez - developer, gamer">
   <Navbar />
   
   <main>
-    <!-- Hero Section -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-[#0B0B0D] border-b border-[#23262B] relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-b from-white/[0.06] via-transparent to-transparent pointer-events-none"></div>
-      <div class="max-w-4xl mx-auto text-center relative">
-        <p class="text-[11px] font-bold tracking-[0.35em] text-regza-dim mb-6">C E L L &nbsp; R E G Z A</p>
-        <div class="mb-8">
-          <img src={avatarPath} alt="Colin avatar" width="128" height="128" loading="eager"
-            class="w-32 h-32 rounded-full mx-auto mb-6 object-cover ring-2 ring-primary-500/40 shadow-lg"
-            onerror="this.onerror=null;this.src='https://github.com/ColinGamez.png'" />
-          <h1 class="text-4xl sm:text-6xl font-bold text-white mb-6 leading-tight">
-            Hey, I'm <span class="neon-text font-extrabold">Colin</span>
+    <!-- Hero: short and human -->
+    <section class="relative px-4 sm:px-6 lg:px-8 pt-14 pb-10 overflow-hidden" style={`background-image:url(${cleanBase}/aero/hero-aurora.jpg);background-size:cover;background-position:center`}>
+      <div class="max-w-4xl mx-auto relative flex flex-col sm:flex-row items-center gap-6">
+        <img src={avatarPath} alt="Colin" width="128" height="128" loading="eager"
+          class="w-28 h-28 rounded-full object-cover shrink-0"
+          style="border:3px solid #fff;box-shadow:0 0 0 2px #29B6F6,0 8px 32px rgba(2,136,209,0.5)"
+          onerror="this.onerror=null;this.src='https://github.com/ColinGamez.png'" />
+        <div class="aero-glass px-7 py-6 text-left w-full">
+          <h1 class="text-3xl sm:text-4xl font-bold text-sky-900 leading-tight">
+            ColinGamez
           </h1>
-          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            {personalInfo.bio}
+          <p class="text-sky-900/80 mt-2">
+            Developer and gamer. I build web apps and little tools, post gaming stuff on YouTube, and stream on Twitch. This site is my corner — code, downloads, and a lot of 2010.
           </p>
-        </div>
-        
-        <div class="flex flex-wrap justify-center gap-6">
-          {socialLinks.map(link => (
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-primary inline-flex items-center space-x-3 text-lg"
-            >
-              {link.name === 'YouTube' && (
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm3.7 10.8l-4.4 2.5c-.3.2-.7 0-.7-.4V7.1c0-.4.4-.6.7-.4l4.4 2.5c.3.2.3.6 0 .8z"/>
-                </svg>
-              )}
-              {link.name === 'GitHub' && (
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd" />
-                </svg>
-              )}
-              {link.name === 'Twitter' && (
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
-                </svg>
-              )}
-              <span>{link.name}</span>
-            </a>
-          ))}
+          <div class="flex flex-wrap gap-2 mt-4">
+            {socialLinks.map(link => (
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-secondary text-sm">
+                {link.name}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>
-    
-    <!-- Quick Links Section -->
-    <section class="py-20 bg-[#08090A] relative overflow-hidden border-b border-[#1A1C20]">
-      <div class="absolute inset-0 bg-gradient-to-r from-regza-glow/5 to-transparent"></div>
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-white mb-6">
-            What I <span class="neon-text">Do</span>
-          </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Explore my projects, download useful tools, and connect with me across platforms.
-          </p>
-        </div>
-        
-        <div class="grid md:grid-cols-2 gap-10">
-          <a
-            href={`${import.meta.env.BASE_URL}/projects/`}
-            class="card p-10 hover:scale-[1.05] transition-all duration-300 group tech-glow"
-          >
-            <div class="flex items-center space-x-4 mb-6">
-              <div class="p-4 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 rounded-xl gaming-gradient">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7H3a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" />
-                </svg>
-              </div>
-              <h3 class="text-2xl font-bold text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                My Projects
-              </h3>
-            </div>
-            <p class="text-gray-600 dark:text-gray-300">
-              Browse through my GitHub repositories, from web applications to game development tools.
-            </p>
-          </a>
-          
-          <a
-            href={`${import.meta.env.BASE_URL}/downloads/`}
-            class="card p-10 hover:scale-[1.05] transition-all duration-300 group tech-glow"
-          >
-            <div class="flex items-center space-x-4 mb-6">
-              <div class="p-4 bg-gradient-to-br from-gaming-400 to-gaming-600 rounded-xl">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 class="text-2xl font-bold text-white group-hover:text-gaming-600 dark:group-hover:text-gaming-400 transition-colors">
-                Downloads
-              </h3>
-            </div>
-            <p class="text-gray-600 dark:text-gray-300">
-              Access tools, assets, and resources I've created for the community.
-            </p>
-          </a>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Skills/Tech Stack Section -->
-    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-[#0B0B0D]">
+
+    <!-- VS2010 start page: the centerpiece -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-white mb-6">
-            Tech <span class="neon-text">Stack</span>
-          </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Technologies and tools I work with
-          </p>
+        <VS2010Window />
+        <div class="aero-glass mt-6 px-6 py-5 flex flex-wrap items-center justify-center gap-6">
+          <img src={`${cleanBase}/aero/icons/vs2010-48.png`} alt="Visual Studio 2010" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Visual Studio 2010" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/games.png`} alt="Xbox 360" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Xbox 360" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/ea-games.png`} alt="EA Games" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="EA Games" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/minecraft.png`} alt="Minecraft" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Minecraft" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/roblox.png`} alt="Roblox" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Roblox" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/roblox-studio.png`} alt="Roblox Studio" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Roblox Studio" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/steam.png`} alt="Steam" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Steam" loading="lazy" />
+          <img src={`${cleanBase}/aero/icons/discord.png`} alt="Discord" width="48" height="48" class="w-12 h-12 hover:scale-110 transition-transform" title="Discord" loading="lazy" />
         </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          <!-- Languages -->
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🐍</div>
-            <h3 class="font-semibold text-white">Python</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">💻</div>
-            <h3 class="font-semibold text-white">JavaScript</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">⚛️</div>
-            <h3 class="font-semibold text-white">React</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🎨</div>
-            <h3 class="font-semibold text-white">Tailwind</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🚀</div>
-            <h3 class="font-semibold text-white">Astro</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🔧</div>
-            <h3 class="font-semibold text-white">Node.js</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🎮</div>
-            <h3 class="font-semibold text-white">Game Dev</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🐙</div>
-            <h3 class="font-semibold text-white">Git</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">🎬</div>
-            <h3 class="font-semibold text-white">Video Edit</h3>
-          </div>
-          
-          <div class="card p-6 text-center hover:scale-110 transition-all duration-300 tech-glow">
-            <div class="text-4xl mb-3">☁️</div>
-            <h3 class="font-semibold text-white">Cloud</h3>
+      </div>
+    </section>
+
+    <!-- My stuff: two doors, plain words -->
+    <section class="py-8">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-white mb-5" style="text-shadow:0 2px 8px rgba(1,87,155,0.9)">My stuff</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <a href={`${import.meta.env.BASE_URL}projects/`} class="card p-7 hover:scale-[1.02] transition-all duration-300 group tech-glow block">
+            <div class="flex items-center space-x-4 mb-3">
+              <img src={`${cleanBase}/aero/icons/projects.png`} alt="" width="48" height="48" class="w-12 h-12" loading="lazy" />
+              <h3 class="text-xl font-bold text-sky-900 group-hover:text-sky-600 transition-colors">Code I've put on GitHub</h3>
+            </div>
+            <p class="text-sky-900/70 text-sm">Web apps, game experiments, tools. Sorted by stars, updated live from my profile.</p>
+          </a>
+          <a href={`${import.meta.env.BASE_URL}downloads/`} class="card p-7 hover:scale-[1.02] transition-all duration-300 group tech-glow block">
+            <div class="flex items-center space-x-4 mb-3">
+              <img src={`${cleanBase}/aero/icons/files.png`} alt="" width="48" height="48" class="w-12 h-12" loading="lazy" />
+              <h3 class="text-xl font-bold text-sky-900 group-hover:text-sky-600 transition-colors">Files you can grab</h3>
+            </div>
+            <p class="text-sky-900/70 text-sm">Things I made for the community. Free, no account, no nonsense.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbox as Solution Explorer, not a card farm -->
+    <section class="py-8 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-2xl font-bold text-white mb-5" style="text-shadow:0 2px 8px rgba(1,87,155,0.9)">Toolbox</h2>
+        <div class="vs2010-explorer">
+          <div class="vs2010-explorer-title">Solution Explorer — toolbox</div>
+          <ul class="vs2010-tree">
+            <li><span class="fld">Languages</span>
+              <ul>
+                <li><img src={`${cleanBase}/aero/icons/terminal.png`} alt="" width="16" height="16" class="w-4 h-4" /> Python</li>
+                <li><img src={`${cleanBase}/aero/icons/web.png`} alt="" width="16" height="16" class="w-4 h-4" /> JavaScript</li>
+              </ul>
+            </li>
+            <li><span class="fld">Frontend</span>
+              <ul>
+                <li><img src={`${cleanBase}/aero/icons/notes.png`} alt="" width="16" height="16" class="w-4 h-4" /> React</li>
+                <li><img src={`${cleanBase}/aero/icons/photos.png`} alt="" width="16" height="16" class="w-4 h-4" /> Tailwind CSS</li>
+                <li><img src={`${cleanBase}/aero/icons/pc.png`} alt="" width="16" height="16" class="w-4 h-4" /> Astro</li>
+              </ul>
+            </li>
+            <li><span class="fld">Tools</span>
+              <ul>
+                <li><img src={`${cleanBase}/aero/icons/terminal.png`} alt="" width="16" height="16" class="w-4 h-4" /> Node.js</li>
+                <li><img src={`${cleanBase}/aero/icons/projects.png`} alt="" width="16" height="16" class="w-4 h-4" /> Git</li>
+              </ul>
+            </li>
+            <li><span class="fld">Off the clock</span>
+              <ul>
+                <li><img src={`${cleanBase}/aero/icons/games.png`} alt="" width="16" height="16" class="w-4 h-4" /> Game dev + Xbox 360 shelf above</li>
+                <li><img src={`${cleanBase}/aero/icons/media.png`} alt="" width="16" height="16" class="w-4 h-4" /> Video editing</li>
+                <li><img src={`${cleanBase}/aero/icons/music.png`} alt="" width="16" height="16" class="w-4 h-4" /> Streaming bits</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- @ water band -->
+    <section class="relative h-28 my-8 overflow-hidden" style={`background-image:url(${cleanBase}/aero/aqua-1.jpg);background-size:cover;background-position:center`}>
+      <div class="absolute inset-0 bg-sky-900/10"></div>
+    </section>
+
+    <Gadgets />
+
+    <!-- Nanami, short version -->
+    <section class="pb-14 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto aero-glass overflow-hidden">
+        <div class="grid md:grid-cols-2">
+          <img src={`${cleanBase}/aero/nanami-1.jpg`} alt="Madobe Nanami" class="w-full h-64 md:h-full object-cover" loading="lazy" />
+          <div class="p-7 md:p-9">
+            <h2 class="text-2xl font-bold text-sky-900 mb-3">Yeah, there's a talking Nanami on this site</h2>
+            <p class="text-sky-900/75 text-sm mb-3">Bottom-right corner — click her and she talks (real voice clip from the old SoraTan desktop mascot). The boot animation up top is converted from a real Nanami boot skin too.</p>
+            <p class="text-sky-900/60 text-xs">Art: Madobe Nanami themepack (Microsoft Japan). Boot skin: dark13th. @ waters: Asadal stock.</p>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+  <style>
+    .vs2010-explorer { background: #fff; border: 1px solid #1b4f72; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 40px rgba(1,87,155,0.4); font-family: 'Segoe UI', sans-serif; }
+    .vs2010-explorer-title { padding: 6px 12px; font-size: 12px; color: #fff; background: linear-gradient(to bottom, #5cbcec, #0d4e86); text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+    .vs2010-tree { list-style: none; margin: 0; padding: 12px 16px; font-size: 14px; color: #1e1e1e; }
+    .vs2010-tree ul { list-style: none; margin: 2px 0 8px 18px; padding-left: 12px; border-left: 1px dotted #a9cfe8; }
+    .vs2010-tree li { margin: 3px 0; display: block; }
+    .vs2010-tree li li { display: flex; align-items: center; gap: 8px; }
+    .vs2010-tree .fld { font-weight: 600; color: #0d4e86; }
+    .vs2010-tree .fld::before { content: '▾ '; color: #1d6fae; }
+  </style>
   
   <Footer />
 </Layout>

@@ -74,3 +74,18 @@ jspm_packages/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# Local bulk asset packs (too big / copyrighted, do not commit)
+FAA assets/
+win7/
+*.bs7
+*.sora
+*.svs
+*.themepack
+*.gadget
+*.ani
+*.cur
+public/aero/raw/
+
+# Agent skills (reinstallable via npx skills add, vendored upstream)
+.agents/

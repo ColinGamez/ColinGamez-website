@@ -1,0 +1,113 @@
+---
+// Visual Studio 2010 flavor — Aero glass IDE chrome, 2009-2010s feel.
+// Title bar, menu strip, tabs, line numbers, status bar. Pure CSS, no binaries.
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+---
+<div class="vs2010">
+  <div class="vs-titlebar">
+    <img src={`${base}/aero/icons/vs2010.png`} alt="VS2010" width="16" height="16" class="w-4 h-4" />
+    <span>ColinGamez - Microsoft Visual Studio 2010</span>
+    <span class="vs-winbtns"><i></i><i></i><i class="close"></i></span>
+  </div>
+  <div class="vs-menu"><span>File</span><span>Edit</span><span>View</span><span>Project</span><span>Build</span><span>Debug</span><span>Help</span></div>
+  <div class="vs-ribbon">
+    <div class="vs-rtabs"><span class="active">Home</span><span>Build</span><span>Debug</span><span>View</span></div>
+    <div class="vs-rgroups">
+      <div class="vs-rgroup">
+        <img src={`${base}/aero/icons/files.png`} alt="" width="32" height="32" class="w-8 h-8" />
+        <img src={`${base}/aero/icons/terminal.png`} alt="" width="32" height="32" class="w-8 h-8" />
+        <label>Project</label>
+      </div>
+      <div class="vs-rgroup">
+        <img src={`${base}/aero/icons/projects.png`} alt="" width="32" height="32" class="w-8 h-8" />
+        <img src={`${base}/aero/icons/notes.png`} alt="" width="32" height="32" class="w-8 h-8" />
+        <label>Build</label>
+      </div>
+      <div class="vs-rgroup">
+        <img src={`${base}/aero/icons/games.png`} alt="" width="32" height="32" class="w-8 h-8" />
+        <img src={`${base}/aero/icons/spypp.png`} alt="" width="32" height="32" class="w-8 h-8" />
+        <label>Debug</label>
+      </div>
+    </div>
+  </div>
+  <div class="vs-tabs" id="vs-tabs"><span class="active" data-pane="pane-start">Start Page</span><span data-pane="pane-code">index.astro</span><span data-pane="pane-config">config.json</span></div>
+  <div class="vs-pane" id="pane-start">
+    <div class="vs-startgrid">
+      <div>
+        <h4>Recent Projects</h4>
+        <a href={`${base}/projects/`}>View all projects</a>
+        <a href="https://github.com/ColinGamez" target="_blank" rel="noopener noreferrer">ColinGamez on GitHub</a>
+      </div>
+      <div>
+        <h4>ColinGamez News</h4>
+        <p>Nanami themepack wallpapers + voice now live</p>
+        <p>Frutiger Aero glass theme across all pages</p>
+        <p>Xbox 360-era gaming shelf added</p>
+      </div>
+    </div>
+  </div>
+  <div class="vs-pane hidden" id="pane-code">
+  <div class="vs-code"><pre><span class="ln">1</span><span class="kw">const</span> colin = <span class="kw">await import</span>(<span class="str">'./colin.json'</span>);
+<span class="ln">2</span>
+<span class="ln">3</span><span class="cm">// 2010s build: Aero glass + Nanami + Xbox shelf</span>
+<span class="ln">4</span>colin.ship(&#123; aero: <span class="kw">true</span>, nanami: <span class="str">'v2-style'</span>, xbox360: [<span class="str">'minecraft'</span>, <span class="str">'roblox'</span>] &#125;);
+<span class="ln">5</span><span class="fn">Build succeeded</span> -- 0 errors, ready to publish.</pre></div>
+  </div>
+  <div class="vs-pane hidden" id="pane-config">
+  <div class="vs-code"><pre><span class="ln">1</span>&#123;
+<span class="ln">2</span>  <span class="str">"name"</span>: <span class="str">"Colin"</span>,
+<span class="ln">3</span>  <span class="str">"theme"</span>: <span class="str">"frutiger-aero"</span>,
+<span class="ln">4</span>  <span class="str">"ide"</span>: <span class="str">"vs2010"</span>
+<span class="ln">5</span>&#125;</pre></div>
+  </div>
+  <div class="vs-status"><span>Ready</span><span>Ln 5, Col 42</span><span>UTF-8</span></div>
+  <audio id="vs-blip" src={`${base}/aero/sounds/pirorin.wav`} preload="none"></audio>
+</div>
+<script>
+  const tabs = document.querySelectorAll('#vs-tabs span');
+  const blip = document.getElementById('vs-blip');
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('.vs-pane').forEach(p => p.classList.add('hidden'));
+      document.getElementById(t.dataset.pane)?.classList.remove('hidden');
+      try { blip?.pause(); if (blip) blip.currentTime = 0; blip?.play?.()?.catch?.(() => {}); } catch {}
+    });
+  });
+</script>
+<style>
+  .vs2010 { border: 1px solid #1b4f72; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 40px rgba(1,87,155,0.4); font-family: Consolas, 'JetBrains Mono', monospace; }
+  .vs-titlebar { display: flex; align-items: center; gap: 8px; padding: 6px 10px; font-size: 12px; color: #fff; font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #bfe9ff 0%, #5cbcec 8%, #1d6fae 50%, #0d4e86 55%, #2f8fc6 100%); text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+  .vs-winbtns { margin-left: auto; display: flex; gap: 4px; }
+  .vs-winbtns i { width: 28px; height: 18px; border: 1px solid rgba(255,255,255,0.7); border-radius: 3px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(120,200,240,0.4)); display: block; }
+  .vs-winbtns .close { background: linear-gradient(to bottom, #f6b0a6, #d84a35); }
+  .vs-menu { display: flex; gap: 16px; padding: 4px 12px; font-size: 12px; font-family: 'Segoe UI', sans-serif; color: #0d3c5e;
+    background: linear-gradient(to bottom, #fdfefe, #d6eefc); border-bottom: 1px solid #a9cfe8; }
+  .vs-ribbon { background: linear-gradient(to bottom, #f4fafe, #d3e9fa); border-bottom: 1px solid #a9cfe8; font-family: 'Segoe UI', sans-serif; }
+  .vs-rtabs { display: flex; gap: 2px; padding: 4px 8px 0; font-size: 12px; }
+  .vs-rtabs span { padding: 3px 16px; border-radius: 6px 6px 0 0; color: #0d3c5e; border: 1px solid transparent; border-bottom: none; }
+  .vs-rtabs .active { background: #fff; border-color: #a9cfe8; font-weight: 600; box-shadow: 0 -2px 6px rgba(29,111,174,0.15); }
+  .vs-rgroups { display: flex; gap: 8px; padding: 8px 12px 18px; background: #fff; border-top: 1px solid #a9cfe8; }
+  .vs-rgroup { display: flex; gap: 6px; align-items: center; padding: 4px 12px 4px 8px; border-right: 1px solid #c9e0f2; position: relative; }
+  .vs-rgroup img { padding: 2px; border-radius: 4px; border: 1px solid transparent; }
+  .vs-rgroup img:hover { border-color: #e8b44a; background: linear-gradient(to bottom, #fff3d6, #ffe1a1); }
+  .vs-rgroup label { position: absolute; bottom: -14px; left: 0; right: 0; text-align: center; font-size: 10px; color: #4a6a86; }
+  .vs-tabs { display: flex; gap: 4px; padding: 6px 8px 0; background: #eaf5fd; font-size: 12px; font-family: 'Segoe UI', sans-serif; }
+  .vs-tabs span { padding: 4px 14px; background: #c9e6fa; border: 1px solid #a9cfe8; border-bottom: none; border-radius: 6px 6px 0 0; color: #0d3c5e; cursor: pointer; }
+  .vs-tabs .active { background: #fff; font-weight: 600; }
+  .vs-pane { background: #fff; }
+  .vs-startgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 20px; font-family: 'Segoe UI', sans-serif; }
+  .vs-startgrid h4 { font-size: 13px; font-weight: 700; color: #1d6fae; border-bottom: 1px solid #d3e9fa; padding-bottom: 4px; margin-bottom: 8px; }
+  .vs-startgrid a { display: block; font-size: 13px; color: #06c; text-decoration: none; margin-bottom: 4px; }
+  .vs-startgrid a:hover { text-decoration: underline; }
+  .vs-startgrid p { font-size: 13px; color: #333; margin-bottom: 4px; }
+  .vs-code { background: #fff; padding: 12px 0; font-size: 13px; line-height: 1.7; overflow-x: auto; }
+  .vs-code pre { margin: 0; padding: 0 16px; color: #1e1e1e; }
+  .ln { display: inline-block; width: 28px; color: #2b91af; user-select: none; }
+  .kw { color: #0000ff; } .str { color: #a31515; } .cm { color: #008000; } .fn { color: #2b91af; font-weight: bold; }
+  .vs-status { display: flex; gap: 24px; padding: 4px 12px; font-size: 12px; font-family: 'Segoe UI', sans-serif; color: #0d3c5e;
+    background: linear-gradient(to bottom, #eaf5fd, #bcdcf3); border-top: 1px solid #a9cfe8; }
+</style>

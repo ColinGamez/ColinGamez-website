@@ -1,0 +1,38 @@
+---
+// Frutiger Aero boot screen — converted from NANAMI.bs7 (200x200 x15 filmstrip)
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+---
+<div id="aero-boot" class="aero-boot">
+  <div class="aero-boot-inner">
+    <div class="boot-filmstrip" style={`background-image:url(${base}/aero/boot-filmstrip.png)`}></div>
+    <p id="boot-text" class="boot-text">Nanami is preparing...</p>
+    <p class="boot-sub">c Microsoft Corporation / dark13th boot skin &bull; web conversion</p>
+  </div>
+</div>
+<style>
+  .aero-boot {
+    position: fixed; inset: 0; z-index: 100;
+    background: radial-gradient(circle at 50% 30%, #4FC3F7 0%, #0288D1 55%, #01579B 100%);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.6s ease; 
+  }
+  .aero-boot.done { opacity: 0; pointer-events: none; }
+  .aero-boot-inner { text-align: center; }
+  .boot-filmstrip {
+    width: 200px; height: 200px; margin: 0 auto 16px;
+    background-repeat: no-repeat;
+    animation: bootplay 1.2s steps(15) infinite;
+    filter: drop-shadow(0 0 24px rgba(255,255,255,0.8));
+  }
+  @keyframes bootplay { from { background-position: 0 0; } to { background-position: 0 -3000px; } }
+  .boot-text { color: #fff; font-size: 20px; font-weight: 600; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  .boot-sub { color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 8px; }
+</style>
+<script>
+  const boot = document.getElementById('aero-boot');
+  const bt = document.getElementById('boot-text');
+  const msgs = ['Nanami is preparing...', 'Nanami is waking up...', 'Welcome to ColinGamez!'];
+  let mi = 0;
+  const cyc = setInterval(() => { mi = (mi + 1) % msgs.length; if (bt) bt.textContent = msgs[mi]; }, 900);
+  setTimeout(() => { clearInterval(cyc); boot?.classList.add('done'); setTimeout(() => boot?.remove(), 700); }, 2600);
+</script>
