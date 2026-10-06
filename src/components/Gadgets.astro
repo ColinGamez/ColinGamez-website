@@ -16,14 +16,11 @@ const cards = cardsData.default;
     <div class="grid sm:grid-cols-2 gap-6 max-w-3xl">
       <div class="gadget">
         <div class="gadget-title"><img src={`${base}/aero/gadgets/wotd-icon.png`} alt="" width="32" height="32" class="w-8 h-8" /><span>Japanese Word of the Day</span></div>
-        <div class="gadget-body">
-          <img id="wotd-card" class="wotd-card" src={`${base}/aero/wotd/cards/${cards[0].id}.png`} alt="" width="150" />
-          <p id="wotd-roma" class="wotd-roma">{cards[0].roma}  E{cards[0].mean}</p>
-          <div class="wotd-btns">
-            <button id="wotd-play" class="gadget-btn hidden">play recording</button>
-            <button id="wotd-next" class="gadget-btn">new word</button>
-            <button id="wotd-quiz" class="gadget-btn">quiz: hide</button>
-          </div>
+        <div class="gadget-body wotd-face">
+                    <img id="wotd-card" class="wotd-card" src={`${base}/aero/wotd/cards/${cards[0].id}.png`} alt="" width="132" />
+          <p class="audiorow">Play Audio: <button id="wotd-play">Play</button></p>
+          <p class="learn"><a href="https://www.declan-software.com/japanese/" target="_blank" rel="noopener noreferrer">Learn Japanese Now!</a></p>
+          <p class="tiny"><a href="#" id="wotd-next">new word</a></p>
           <audio id="wotd-audio" preload="none"></audio>
         </div>
         <p class="gadget-credit">Declan Software word cards + recordings, used with permission · <a href="https://github.com/ColinGamez/Japanese-wotd" target="_blank" rel="noopener noreferrer">Windows app</a></p>
@@ -47,47 +44,36 @@ const cards = cardsData.default;
   .gadget-title { display: flex; align-items: center; gap: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600;
     background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0.05)); border-bottom: 1px solid rgba(255,255,255,0.2); }
   .gadget-body { padding: 12px 14px; min-height: 118px; }
-  .wotd-card { width: 150px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.4); background: #fff; }
-  .wotd-card.blurred { filter: blur(7px); }
-  .wotd-roma { font-size: 13px; opacity: 0.85; margin: 8px 0 10px; min-height: 18px; }
-  .wotd-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-  .gadget-btn { font-size: 12px; padding: 3px 14px; border-radius: 12px; color: #03395e;
-    background: linear-gradient(to bottom, #fff, #C8F0FF); border: 1px solid rgba(255,255,255,0.9); }
-  .gadget-btn:hover { filter: brightness(1.08); }
+  .wotd-face { background: #fff; border-radius: 6px; padding: 10px; font-family: Arial, sans-serif; font-size: 9pt; color: #808080; text-align: center; }
+  .wotd-face img#wotd-card { width: 132px; display: block; margin: 0 auto; }
+  .audiorow { margin: 6px 0 2px; }
+  .audiorow button { font-family: Arial, sans-serif; font-size: 9pt; }
+  .learn { margin: 6px 0 2px; }
+  .tiny { margin: 4px 0 0; font-size: 8pt; }
   .gadget-credit { font-size: 10px; opacity: 0.55; padding: 4px 10px 6px; }
   .minpaso-links { display: flex; gap: 16px; font-size: 14px; margin-bottom: 10px; }
   .minpaso-links a { color: #7fd4ff; }
   .minpaso-note { font-size: 12px; opacity: 0.8; }
 </style>
 <script define:vars={{ cards, base }}>
-  // Original Declan pack: one card per day, same day-index formula as before.
   const card = document.getElementById('wotd-card');
-  const roma = document.getElementById('wotd-roma');
   const playBtn = document.getElementById('wotd-play');
-  const quizBtn = document.getElementById('wotd-quiz');
   const audio = document.getElementById('wotd-audio');
   const list = cards;
   let wi = Math.floor(Date.now() / 86400000) % list.length;
-  let quizHidden = false;
   function show() {
     const w = list[wi];
     if (card) {
       card.src = base + '/aero/wotd/cards/' + w.id + '.png';
-      card.alt = w.kanji + ' ' + w.kana + ' (' + w.roma + ') - ' + w.mean;
-      card.classList.toggle('blurred', quizHidden);
+      card.alt = w.roma + ' - ' + w.mean;
     }
-    if (roma) roma.textContent = quizHidden ? '??? - press quiz to reveal' : w.roma + ' - ' + w.mean;
-    if (playBtn) playBtn.classList.toggle('hidden', !w.audio);
-    if (quizBtn) quizBtn.textContent = quizHidden ? 'quiz: reveal' : 'quiz: hide';
+    if (playBtn) playBtn.parentElement.style.display = w.audio ? '' : 'none';
     if (audio) { audio.pause(); audio.removeAttribute('src'); }
   }
   show();
-  document.getElementById('wotd-next')?.addEventListener('click', () => {
+  document.getElementById('wotd-next')?.addEventListener('click', (e) => {
+    e.preventDefault();
     wi = (wi + 1) % list.length;
-    show();
-  });
-  quizBtn?.addEventListener('click', () => {
-    quizHidden = !quizHidden;
     show();
   });
   playBtn?.addEventListener('click', () => {
