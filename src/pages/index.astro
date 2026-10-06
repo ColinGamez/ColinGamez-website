@@ -14,6 +14,13 @@ const socialLinks = config.default.socialLinks;
 const baseUrl = import.meta.env.BASE_URL;
 const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 const avatarPath = `${cleanBase}${personalInfo.photo}`;
+const socialIcons = {
+  YouTube: 'youtube',
+  GitHub: 'github',
+  Twitter: 'x',
+  Twitch: 'twitch',
+  Discord: 'discord',
+};
 ---
 
 <Layout title="ColinGamez - developer, gamer">
@@ -36,7 +43,8 @@ const avatarPath = `${cleanBase}${personalInfo.photo}`;
           </p>
           <div class="flex flex-wrap gap-2 mt-4">
             {socialLinks.map(link => (
-              <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-secondary text-sm">
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-secondary text-sm inline-flex items-center gap-2">
+                <img src={`${cleanBase}/aero/icons/langs/${socialIcons[link.name]}.svg`} alt="" width="16" height="16" class="w-4 h-4" loading="lazy" />
                 {link.name}
               </a>
             ))}
@@ -69,7 +77,7 @@ const avatarPath = `${cleanBase}${personalInfo.photo}`;
         <div class="grid md:grid-cols-2 gap-6">
           <a href={`${import.meta.env.BASE_URL}projects/`} class="card p-7 hover:scale-[1.02] transition-all duration-300 group tech-glow block">
             <div class="flex items-center space-x-4 mb-3">
-              <img src={`${cleanBase}/aero/icons/projects.png`} alt="" width="48" height="48" class="w-12 h-12" loading="lazy" />
+              <img src={`${cleanBase}/aero/icons/langs/github.svg`} alt="GitHub" width="48" height="48" class="w-12 h-12" loading="lazy" />
               <h3 class="text-xl font-bold text-sky-900 group-hover:text-sky-600 transition-colors">Code I've put on GitHub</h3>
             </div>
             <p class="text-sky-900/70 text-sm">Web apps, game experiments, tools. Sorted by stars, updated live from my profile.</p>
@@ -94,28 +102,28 @@ const avatarPath = `${cleanBase}${personalInfo.photo}`;
           <ul class="vs2010-tree">
             <li><span class="fld">Languages</span>
               <ul>
-                <li><img src={`${cleanBase}/aero/icons/terminal.png`} alt="" width="16" height="16" class="w-4 h-4" /> Python</li>
-                <li><img src={`${cleanBase}/aero/icons/web.png`} alt="" width="16" height="16" class="w-4 h-4" /> JavaScript</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/python.svg`} alt="Python" width="16" height="16" class="w-4 h-4" /> Python</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/javascript.svg`} alt="JavaScript" width="16" height="16" class="w-4 h-4" /> JavaScript</li>
               </ul>
             </li>
             <li><span class="fld">Frontend</span>
               <ul>
-                <li><img src={`${cleanBase}/aero/icons/notes.png`} alt="" width="16" height="16" class="w-4 h-4" /> React</li>
-                <li><img src={`${cleanBase}/aero/icons/photos.png`} alt="" width="16" height="16" class="w-4 h-4" /> Tailwind CSS</li>
-                <li><img src={`${cleanBase}/aero/icons/pc.png`} alt="" width="16" height="16" class="w-4 h-4" /> Astro</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/react.svg`} alt="React" width="16" height="16" class="w-4 h-4" /> React</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/tailwindcss.svg`} alt="Tailwind CSS" width="16" height="16" class="w-4 h-4" /> Tailwind CSS</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/astro.svg`} alt="Astro" width="16" height="16" class="w-4 h-4" /> Astro</li>
               </ul>
             </li>
             <li><span class="fld">Tools</span>
               <ul>
-                <li><img src={`${cleanBase}/aero/icons/terminal.png`} alt="" width="16" height="16" class="w-4 h-4" /> Node.js</li>
-                <li><img src={`${cleanBase}/aero/icons/projects.png`} alt="" width="16" height="16" class="w-4 h-4" /> Git</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/nodedotjs.svg`} alt="Node.js" width="16" height="16" class="w-4 h-4" /> Node.js</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/git.svg`} alt="Git" width="16" height="16" class="w-4 h-4" /> Git</li>
               </ul>
             </li>
             <li><span class="fld">Off the clock</span>
               <ul>
                 <li><img src={`${cleanBase}/aero/icons/games.png`} alt="" width="16" height="16" class="w-4 h-4" /> Game dev + Xbox 360 shelf above</li>
                 <li><img src={`${cleanBase}/aero/icons/media.png`} alt="" width="16" height="16" class="w-4 h-4" /> Video editing</li>
-                <li><img src={`${cleanBase}/aero/icons/music.png`} alt="" width="16" height="16" class="w-4 h-4" /> Streaming bits</li>
+                <li><img src={`${cleanBase}/aero/icons/langs/twitch.svg`} alt="Streaming" width="16" height="16" class="w-4 h-4" /> Streaming bits</li>
               </ul>
             </li>
           </ul>
