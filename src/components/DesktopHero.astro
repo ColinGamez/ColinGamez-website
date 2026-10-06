@@ -1,0 +1,105 @@
+---
+// Full-viewport Win7 desktop: wallpaper, clickable desktop icons (select on
+// first click, open on second — like the real thing), and your avatar +
+// socials as a sidebar gadget. Icons are all converted originals.
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const { avatarPath, socialLinks, channelUrl } = Astro.props;
+const socialIcons = {
+  YouTube: 'youtube',
+  GitHub: 'github',
+  Twitter: 'x',
+  Twitch: 'twitch',
+  Discord: 'discord',
+};
+const deskIcons = [
+  { icon: 'projects.png', label: 'My Projects', href: `${base}/projects/`, blank: false },
+  { icon: 'files.png', label: 'Downloads', href: `${base}/downloads/`, blank: false },
+  { icon: 'notes.png', label: 'Rankings', href: `${base}/minipaso/`, blank: false },
+  { icon: 'media.png', label: 'YouTube', href: channelUrl, blank: true },
+];
+---
+<section class="desktop" style={`background-image:url(${base}/aero/hero-aurora.jpg)`}>
+  <div class="d-icons">
+    {deskIcons.map(d => (
+      <a href={d.href} target={d.blank ? '_blank' : undefined} rel={d.blank ? 'noopener noreferrer' : undefined} class="d-icon" title={d.blank ? 'Opens in a new tab' : 'Click twice, like Windows'}>
+        <img src={`${base}/aero/icons/${d.icon}`} alt="" width="48" height="48" />
+        <span>{d.label}</span>
+      </a>
+    ))}
+  </div>
+  <div class="d-gadget aero-glass">
+    <div class="d-gadget-row">
+      <img src={avatarPath} alt="Colin" width="72" height="72" class="d-avatar"
+        onerror="this.onerror=null;this.src='https://github.com/ColinGamez.png'" />
+      <div>
+        <h1>ColinGamez</h1>
+        <p>Developer and gamer. Web apps, little tools, YouTube gaming, Twitch streams. This site is my corner — code, downloads, and a lot of 2010.</p>
+      </div>
+    </div>
+    <div class="d-pills">
+      {socialLinks.map(link => (
+        <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-secondary d-pill">
+          <img src={`${base}/aero/icons/langs/${socialIcons[link.name]}.svg`} alt="" width="16" height="16" loading="lazy" />
+          {link.name}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .desktop {
+    position: relative; overflow: hidden;
+    min-height: calc(100vh - 4rem);
+    background-size: cover; background-position: center;
+  }
+  .d-icons { position: absolute; top: 16px; left: 16px; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
+  .d-icon {
+    width: 96px; padding: 8px 4px; text-align: center; text-decoration: none;
+    color: #fff; font-size: 12px; line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.5);
+    border: 1px solid transparent; border-radius: 4px;
+  }
+  .d-icon img { width: 48px; height: 48px; margin: 0 auto 4px; filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5)); }
+  .d-icon span { display: block; }
+  .d-icon.selected { background: rgba(2,136,209,0.45); border-color: rgba(255,255,255,0.75); }
+  .d-gadget {
+    position: absolute; top: 16px; right: 16px; z-index: 2;
+    max-width: 360px; padding: 18px;
+  }
+  .d-gadget-row { display: flex; gap: 14px; align-items: center; }
+  .d-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 3px solid #fff; box-shadow: 0 0 0 2px #29B6F6, 0 8px 32px rgba(2,136,209,0.5); }
+  .d-gadget h1 { font-size: 1.6rem; font-weight: 800; color: #0c4a6e; }
+  .d-gadget p { font-size: 0.85rem; color: rgba(1,87,155,0.85); margin-top: 2px; }
+  .d-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .d-pill { font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
+  @media (max-width: 640px) {
+    .desktop { display: flex; flex-direction: column; min-height: 0; }
+    .d-icons { position: static; flex-direction: row; flex-wrap: wrap; padding: 12px; gap: 4px; }
+    .d-icon { width: 76px; }
+    .d-gadget { position: static; margin: 0 12px 12px; max-width: none; }
+  }
+</style>
+<script>
+  const icons = document.querySelectorAll('.d-icon');
+  const desk = document.querySelector('.desktop');
+  icons.forEach(a => {
+    a.addEventListener('click', (ev) => {
+      const was = a.classList.contains('selected');
+      icons.forEach(x => x.classList.remove('selected'));
+      if (!was) {
+        ev.preventDefault();
+        a.classList.add('selected');
+      }
+    });
+  });
+  desk?.addEventListener('click', (ev) => {
+    const t = ev.target;
+    if (t instanceof Element && !t.closest('.d-icon') && !t.closest('.d-gadget')) {
+      icons.forEach(x => x.classList.remove('selected'));
+    }
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') icons.forEach(x => x.classList.remove('selected'));
+  });
+</script>

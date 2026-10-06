@@ -11,14 +11,31 @@ const navItems = [
   { href: `${cleanBaseUrl}/downloads/`, label: 'Downloads' },
   { href: `${cleanBaseUrl}/minipaso/`, label: 'Minipaso' },
 ];
+
+const siteConfig = await import('../../data/config.json');
+const avatarUrl = `${cleanBaseUrl}${siteConfig.default.personalInfo.photo}`;
+const channelUrl = siteConfig.default.socialLinks.find(l => l.name === 'YouTube').url;
+const githubUrl = siteConfig.default.socialLinks.find(l => l.name === 'GitHub').url;
+const githubUser = siteConfig.default.github.username;
+
+const menuPages = [
+  { icon: 'orb.png', name: 'Home', keys: 'home front start', href: `${cleanBaseUrl}/`, blank: false },
+  { icon: 'projects.png', name: 'Projects', keys: 'projects code github repos', href: `${cleanBaseUrl}/projects/`, blank: false },
+  { icon: 'files.png', name: 'Downloads', keys: 'downloads files', href: `${cleanBaseUrl}/downloads/`, blank: false },
+  { icon: 'notes.png', name: 'Minipaso rankings', keys: 'minipaso ranking benchmark wei', href: `${cleanBaseUrl}/minipaso/`, blank: false },
+  { icon: 'media.png', name: 'YouTube channel', keys: 'youtube videos channel', href: channelUrl, blank: true },
+  { icon: 'web.png', name: 'GitHub profile', keys: 'github profile code', href: githubUrl, blank: true },
+];
 ---
 
 <nav class="aero-taskbar sticky top-0 z-50">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <div class="flex items-center gap-3">
-        <a href={`${cleanBaseUrl}/`} class="flex-shrink-0 flex items-center gap-2" title="Start">
-          <img src={`${cleanBaseUrl}/aero/orb.png`} alt="Start orb" width="36" height="36" class="w-9 h-9 rounded-full hover:scale-110 transition-transform duration-200" style="filter:drop-shadow(0 0 8px rgba(255,255,255,0.9))" />
+        <button id="start-orb" class="flex-shrink-0 flex items-center gap-2" title="Start menu" aria-haspopup="true" aria-expanded="false">
+          <img src={`${cleanBaseUrl}/aero/orb.png`} alt="Start" width="36" height="36" class="w-9 h-9 rounded-full hover:scale-110 transition-transform duration-200" style="filter:drop-shadow(0 0 8px rgba(255,255,255,0.9))" />
+        </button>
+        <a href={`${cleanBaseUrl}/`} class="flex items-center gap-2">
           <span class="text-2xl font-bold text-white hover:scale-105 transition-transform duration-200" style="text-shadow:0 2px 6px rgba(1,87,155,0.8)">ColinGamez</span>
           <span class="hidden md:inline text-xs font-semibold text-sky-100">win7 theme</span>
         </a>
@@ -40,7 +57,8 @@ const navItems = [
         ))}
       </div>
       
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-3">
+        <span id="task-clock" class="hidden md:inline text-sm font-semibold text-white tabular-nums" style="text-shadow:0 1px 3px rgba(1,87,155,0.6)">--:--</span>
         <button
           id="mobile-menu-toggle"
           class="sm:hidden p-2 rounded-full text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -70,14 +88,148 @@ const navItems = [
         ))}
       </div>
     </div>
+    <!-- Start menu -->
+    <div id="startmenu" class="startmenu hidden">
+      <div class="sm-left">
+        <input id="sm-search" type="text" placeholder="Start search" autocomplete="off" aria-label="Search programs" />
+        <div id="sm-list">
+          {menuPages.map(p => (
+            <a href={p.href} target={p.blank ? '_blank' : undefined} rel={p.blank ? 'noopener noreferrer' : undefined} class="sm-row" data-name={`${p.name} ${p.keys}`.toLowerCase()}>
+              <img src={`${cleanBaseUrl}/aero/icons/${p.icon}`} alt="" width="32" height="32" loading="lazy" />
+              <span>{p.name}</span>
+            </a>
+          ))}
+        </div>
+        <p id="sm-empty" class="sm-empty hidden">No programs match. Try "projects" or "youtube".</p>
+      </div>
+      <div class="sm-right">
+        <img src={avatarUrl} alt="Colin" width="64" height="64" class="sm-avatar" onerror="this.onerror=null;this.src='https://github.com/ColinGamez.png'" />
+        <p class="sm-user">ColinGamez</p>
+        <a href={`${cleanBaseUrl}/#videos`}>My videos</a>
+        <a href={`${cleanBaseUrl}/#toolbox`}>Toolbox</a>
+        <a href={`${cleanBaseUrl}/#sidebar`}>Sidebar gadgets</a>
+      </div>
+    </div>
   </div>
 </nav>
 
-<script>
+<style>
+  .startmenu {
+    position: absolute; top: 100%; left: 8px; z-index: 60;
+    display: grid; grid-template-columns: 1fr 150px;
+    width: min(440px, calc(100vw - 16px));
+    border-radius: 0 0 12px 12px; overflow: hidden;
+    background: linear-gradient(to bottom, rgba(240,250,255,0.97), rgba(200,235,250,0.97));
+    border: 1px solid rgba(255,255,255,0.9); border-top: none;
+    box-shadow: 0 16px 48px rgba(1,40,80,0.5), inset 0 1px 0 #fff;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .sm-left { padding: 10px; }
+  #sm-search {
+    width: 100%; padding: 6px 12px; margin-bottom: 8px; font-size: 13px;
+    border-radius: 14px; border: 1px solid #8fb8d8; outline: none;
+    box-shadow: inset 0 2px 4px rgba(1,87,155,0.15);
+  }
+  #sm-search:focus { border-color: #0288D1; box-shadow: 0 0 0 2px rgba(2,136,209,0.25); }
+  #sm-list { display: flex; flex-direction: column; max-height: 300px; overflow-y: auto; }
+  .sm-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px;
+    color: #0c4a6e; font-size: 14px; text-decoration: none; }
+  .sm-row:hover { background: linear-gradient(to bottom, #e3f2fd, #bbdefb); border: 1px solid #90caf9; padding: 5px 7px; }
+  .sm-row img { width: 32px; height: 32px; }
+  .sm-empty { font-size: 13px; color: rgba(1,87,155,0.7); padding: 8px; }
+  .sm-right {
+    background: linear-gradient(to bottom, rgba(2,119,189,0.9), rgba(1,60,110,0.92));
+    padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .sm-avatar { width: 64px; height: 64px; border-radius: 8px; object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 0 12px rgba(255,255,255,0.4); }
+  .sm-user { color: #fff; font-weight: 700; font-size: 14px; margin: 4px 0 8px; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+  .sm-right a { color: #d6efff; font-size: 13px; text-decoration: none; padding: 2px 0; }
+  .sm-right a:hover { color: #fff; text-decoration: underline; }
+</style>
+
+<script define:vars={{ githubUser, cleanBaseUrl }}>
   const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
-  
+
   mobileMenuToggle?.addEventListener('click', () => {
     mobileMenu?.classList.toggle('hidden');
   });
+
+  // Taskbar clock, Win7 style.
+  const clock = document.getElementById('task-clock');
+  function tick() {
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    if (clock) clock.textContent = hh + ':' + mm;
+  }
+  tick();
+  setInterval(tick, 15000);
+
+  // Start menu: orb toggles, search filters, repos load on first open.
+  const orb = document.getElementById('start-orb');
+  const menu = document.getElementById('startmenu');
+  const search = document.getElementById('sm-search');
+  const list = document.getElementById('sm-list');
+  const empty = document.getElementById('sm-empty');
+  let reposLoaded = false;
+
+  function setOpen(open) {
+    menu?.classList.toggle('hidden', !open);
+    orb?.setAttribute('aria-expanded', String(open));
+    if (open) {
+      if (search) { search.value = ''; filter(''); search.focus(); }
+      loadRepos();
+    }
+  }
+  function filter(q) {
+    const query = q.trim().toLowerCase();
+    let visible = 0;
+    list?.querySelectorAll('.sm-row').forEach(row => {
+      const hit = !query || (row.dataset.name || '').includes(query);
+      row.classList.toggle('hidden', !hit);
+      if (hit) visible++;
+    });
+    empty?.classList.toggle('hidden', visible > 0);
+  }
+  search?.addEventListener('input', () => filter(search.value));
+  orb?.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    setOpen(menu?.classList.contains('hidden') ?? false);
+  });
+  document.addEventListener('click', (ev) => {
+    const t = ev.target;
+    if (t instanceof Element && !t.closest('#startmenu') && !t.closest('#start-orb')) setOpen(false);
+  });
+  document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') setOpen(false); });
+
+  function loadRepos() {
+    if (reposLoaded) return;
+    reposLoaded = true;
+    fetch('https://api.github.com/users/' + githubUser + '/repos?sort=updated&per_page=8')
+      .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(repos => {
+        if (!Array.isArray(repos) || !list) return;
+        repos.filter(r => !r.fork).slice(0, 8).forEach(r => {
+          const a = document.createElement('a');
+          a.className = 'sm-row';
+          a.href = r.html_url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.dataset.name = ((r.name || '') + ' ' + (r.description || '') + ' ' + (r.language || '')).toLowerCase();
+          const img = document.createElement('img');
+          img.width = 32; img.height = 32; img.loading = 'lazy';
+          img.src = cleanBaseUrl + '/aero/icons/projects.png';
+          img.alt = '';
+          const span = document.createElement('span');
+          span.textContent = r.name;
+          a.appendChild(img);
+          a.appendChild(span);
+          list.appendChild(a);
+        });
+        if (search) filter(search.value);
+      })
+      .catch(() => { /* pages still search fine without repos */ });
+  }
 </script>

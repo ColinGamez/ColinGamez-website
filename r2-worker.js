@@ -27,6 +27,9 @@ export default {
         headers: { ...cors(), 'Content-Type': 'application/json' },
       });
     }
+    if (url.pathname === '/api/yt/latest' && request.method === 'GET') {
+      return ytLatest();
+    }
     
     const objectName = url.pathname.slice(1);
     
@@ -55,6 +58,58 @@ function cors() {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
+}
+
+const YT_CHANNEL_ID = 'UC0lyhakGPk2spTIV4E7CGcw';
+const YT_CHANNEL_URL = 'https://www.youtube.com/@コリンさんYT';
+
+// Latest uploads via the public channel RSS feed (no API key).
+// Cached at the edge for an hour; returns { videos: [{id,title,published,url,thumb}] }.
+async function ytLatest() {
+  try {
+    const res = await fetch('https://www.youtube.com/feeds/videos.xml?channel_id=' + YT_CHANNEL_ID, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36',
+        Accept: 'application/atom+xml',
+      },
+      cf: { cacheTtl: 3600, cacheEverything: true },
+    });
+    if (!res.ok) throw new Error('feed http ' + res.status);
+    const xml = await res.text();
+    const videos = [];
+    const entries = xml.split('<entry>');
+    for (let i = 1; i < entries.length && videos.length < 3; i++) {
+      const e = entries[i];
+      const id = pick(e, 'yt:videoId');
+      const title = unesc(pick(e, 'title'));
+      const published = pick(e, 'published');
+      if (!id) continue;
+      videos.push({
+        id,
+        title: title || 'Untitled upload',
+        published: published ? published.slice(0, 10) : '',
+        url: 'https://www.youtube.com/watch?v=' + id,
+        thumb: 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg',
+      });
+    }
+    return new Response(JSON.stringify({ videos, channelUrl: YT_CHANNEL_URL }), {
+      headers: { ...cors(), 'Content-Type': 'application/json; charset=utf-8' },
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ videos: [], channelUrl: YT_CHANNEL_URL, error: String(err) }), {
+      status: 502,
+      headers: { ...cors(), 'Content-Type': 'application/json; charset=utf-8' },
+    });
+  }
+}
+
+function pick(xml, name) {
+  const m = xml.match(new RegExp('<' + name + '>([^<]*)</' + name + '>'));
+  return m ? m[1].trim() : '';
+}
+
+function unesc(s) {
+  return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 }
 
 // k = kana, r = romaji, m = meaning. Kept small on purpose: every client
