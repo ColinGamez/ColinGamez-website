@@ -5,7 +5,7 @@ interface Props {
   title: string;
   crumbs: { label: string; href: string }[];
   description: string;
-  active: 'Home' | 'Projects' | 'Downloads';
+  active: 'Home' | 'Projects' | 'Downloads' | 'Minipaso';
 }
 const { eyebrow, title, crumbs, description, active } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
@@ -13,6 +13,7 @@ const tabs = [
   { label: 'Home', href: `${base}/` },
   { label: 'Projects', href: `${base}/projects/` },
   { label: 'Downloads', href: `${base}/downloads/` },
+  { label: 'Minipaso', href: `${base}/minipaso/` },
 ];
 ---
 <div class="msdn">
