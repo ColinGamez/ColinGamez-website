@@ -11,30 +11,11 @@ export default {
     if (url.pathname === '/api/minipaso/ranking' && request.method === 'OPTIONS') {
       return new Response(null, { headers: cors() });
     }
-
-    // Shared Japanese Word of the Day list. Canonical home of the words:
-    // the site widget and the Windows app both read from here, with bundled
-    // fallbacks so they still work when the worker is unreachable.
-    if (url.pathname === '/api/wotd/words' && request.method === 'GET') {
-      return new Response(JSON.stringify(WOTD_WORDS), {
-        headers: { ...cors(), 'Content-Type': 'application/json; charset=utf-8' },
-      });
-    }
-    if (url.pathname === '/api/wotd/today' && request.method === 'GET') {
-      const days = Math.floor(Date.now() / 86400000);
-      const idx = days % WOTD_WORDS.length;
-      return new Response(JSON.stringify({ date: new Date().toISOString().slice(0, 10), index: idx, total: WOTD_WORDS.length }), {
-        headers: { ...cors(), 'Content-Type': 'application/json' },
-      });
-    }
     if (url.pathname === '/api/yt/latest' && request.method === 'GET') {
       return ytLatest();
     }
     if (url.pathname === '/api/og/minipaso' && request.method === 'GET') {
       return ogBoard(env);
-    }
-    if (url.pathname === '/api/og/wotd' && request.method === 'GET') {
-      return ogWotd();
     }
     if (url.pathname === '/api/og/yt' && request.method === 'GET') {
       return ogYt();
@@ -156,7 +137,7 @@ async function ogBoard(env) {
   const top = board.slice(0, 5);
   let rows = '';
   if (top.length === 0) {
-    rows = '<text x="80" y="330" font-family="Segoe UI,sans-serif" font-size="40" fill="#b3e5fc">No votes yet — be the first.</text>';
+    rows = '<text x="80" y="330" font-family="Segoe UI,sans-serif" font-size="40" fill="#b3e5fc">No votes yet  Ebe the first.</text>';
   } else {
     top.forEach((r, i) => {
       const y = 250 + i * 68;
@@ -176,20 +157,6 @@ async function ogBoard(env) {
     '<text x="80" y="590" font-family="Segoe UI,sans-serif" font-size="22" fill="#b3e5fc">colingamez.github.io/minipaso</text></svg>');
 }
 
-function ogWotd() {
-  const days = Math.floor(Date.now() / 86400000);
-  const w = WOTD_WORDS[days % WOTD_WORDS.length];
-  return svgRes(svgHead('Japanese Word of the Day') +
-    '<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#3c4650"/><stop offset="1" stop-color="#141a20"/></linearGradient></defs>' +
-    '<rect width="1200" height="630" fill="url(#bg)"/>' +
-    '<circle cx="230" cy="315" r="120" fill="#c62828"/>' +
-    '<text x="230" y="360" font-family="Meiryo UI,MS Gothic,sans-serif" font-size="110" font-weight="bold" fill="#ffffff" text-anchor="middle">日本</text>' +
-    '<text x="420" y="300" font-family="Meiryo UI,MS Gothic,sans-serif" font-size="120" font-weight="bold" fill="#ffffff">' + esc(w.k) + '</text>' +
-    '<text x="424" y="380" font-family="Segoe UI,sans-serif" font-size="44" fill="#b3e5fc">' + esc(w.r) + ' — ' + esc(w.m) + '</text>' +
-    '<text x="424" y="450" font-family="Segoe UI,sans-serif" font-size="28" fill="#7fa8c4">a new shared word every day · colingamez.github.io</text></svg>');
-}
-
 async function ogYt() {
   let videos = [];
   try {
@@ -199,7 +166,7 @@ async function ogYt() {
   }
   let cards = '';
   if (videos.length === 0) {
-    cards = '<text x="80" y="330" font-family="Segoe UI,sans-serif" font-size="40" fill="#b3e5fc">Feed is down — the channel is still up.</text>';
+    cards = '<text x="80" y="330" font-family="Segoe UI,sans-serif" font-size="40" fill="#b3e5fc">Feed is down  Ethe channel is still up.</text>';
   } else {
     videos.forEach((v, i) => {
       const y = 210 + i * 130;
@@ -217,31 +184,6 @@ async function ogYt() {
     cards + '</svg>');
 }
 
-// k = kana, r = romaji, m = meaning. Kept small on purpose: every client
-// bundles a copy as an offline fallback, so additions mean updating the
-// fallbacks in the site widget and the Windows app too.
-const WOTD_WORDS = [
-  { k: 'こんにちは', r: 'konnichiwa', m: 'hello' },
-  { k: 'おはよう', r: 'ohayou', m: 'good morning' },
-  { k: 'こんばんは', r: 'konbanwa', m: 'good evening' },
-  { k: 'ありがとう', r: 'arigatou', m: 'thank you' },
-  { k: 'さくら', r: 'sakura', m: 'cherry blossom' },
-  { k: 'パソコン', r: 'pasokon', m: 'computer' },
-  { k: 'ゲーム', r: 'geemu', m: 'game' },
-  { k: 'すし', r: 'sushi', m: 'sushi' },
-  { k: 'くるま', r: 'kuruma', m: 'car' },
-  { k: 'でんしゃ', r: 'densha', m: 'train' },
-  { k: 'がくせい', r: 'gakusei', m: 'student' },
-  { k: 'せんせい', r: 'sensei', m: 'teacher' },
-  { k: 'ともだち', r: 'tomodachi', m: 'friend' },
-  { k: 'かぞく', r: 'kazoku', m: 'family' },
-  { k: 'あした', r: 'ashita', m: 'tomorrow' },
-  { k: 'そら', r: 'sora', m: 'sky' },
-  { k: 'みず', r: 'mizu', m: 'water' },
-  { k: 'ねこ', r: 'neko', m: 'cat' },
-  { k: 'たのしい', r: 'tanoshii', m: 'fun' },
-  { k: 'はじめる', r: 'hajimeru', m: 'to begin' },
-];
 
 function tag(xml, name) {
   const m = xml.match(new RegExp('<' + name + '>([^<]*)</' + name + '>'));

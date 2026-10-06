@@ -1,35 +1,20 @@
 ---
-// Sidebar, 2009: the two Japan gadgets, recreated for the modern web.
-// The originals can't run anymore  Eboth phoned home to web services that died
-// around 2007-2010 (hitsalive.com word feeds, minpaso.goga.co.jp rankings) and used
-// Vista Sidebar APIs. The word cards + recordings below are the ORIGINAL Declan
-// Software assets, recovered from the Wayback Machine and used with permission.
-// Everything runs 100% locally. No remote calls, no tracking (the originals had urchin.js!).
+// Sidebar, 2009: GOGA's minpaso gadget, recreated for the modern web.
+// The original phoned home to minpaso.goga.co.jp (long dead) and used Vista
+// Sidebar APIs. This one points at our own leaderboard instead.
+// Everything runs locally. No remote calls except our own worker.
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
-const cardsData = await import('../../data/wotd-cards.json');
-const cards = cardsData.default;
 ---
 <section id="sidebar" class="py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
     <h2 class="text-2xl font-bold text-white mb-1" style="text-shadow:0 2px 8px rgba(1,87,155,0.9)">Sidebar, 2009</h2>
-    <p class="text-white/75 text-sm mb-5" style="text-shadow:0 1px 4px rgba(1,87,155,0.8)">Two Japan gadgets from the pack, rebuilt to run without their dead servers. Original art, local words.</p>
+    <p class="text-white/75 text-sm mb-5" style="text-shadow:0 1px 4px rgba(1,87,155,0.8)">GOGA's minpaso gadget, rebuilt to run without its dead server.</p>
     <div class="grid sm:grid-cols-2 gap-6 max-w-3xl">
-      <div class="gadget">
-        <div class="gadget-title"><img src={`${base}/aero/gadgets/wotd-icon.png`} alt="" width="32" height="32" class="w-8 h-8" /><span>Japanese Word of the Day</span></div>
-        <div class="gadget-body wotd-face">
-                    <img id="wotd-card" class="wotd-card" src={`${base}/aero/wotd/cards/${cards[0].id}.png`} alt="" width="132" />
-          <p class="audiorow">Play Audio: <button id="wotd-play">Play</button></p>
-          <p class="learn"><a href="https://www.declan-software.com/japanese/" target="_blank" rel="noopener noreferrer">Learn Japanese Now!</a></p>
-          <p class="tiny"><a href="#" id="wotd-next">new word</a></p>
-          <audio id="wotd-audio" preload="none"></audio>
-        </div>
-        <p class="gadget-credit">Declan Software word cards + recordings, used with permission · <a href="https://github.com/ColinGamez/Japanese-wotd" target="_blank" rel="noopener noreferrer">Windows app</a></p>
-      </div>
       <div class="gadget">
         <div class="gadget-title"><span>&#12415;&#12435;&#12394;&#12398;&#12497;&#12477;&#12467;&#12531;</span></div>
         <div class="gadget-body minpaso">
           <div class="minpaso-links"><span>&#28204;&#23450;</span><span>&#25237;&#31080;</span><a href={`${base}/minipaso/`}>&#12521;&#12531;&#12461;&#12531;&#12464;</a></div>
-          <p class="minpaso-note">The GOGA server is gone, so this one points at our own leaderboard  Egrab the Minipaso Windows app there to submit your scores.</p>
+          <p class="minpaso-note">The GOGA server is gone, so this one points at our own leaderboard — grab the Minipaso Windows app there to submit your scores.</p>
         </div>
         <p class="gadget-credit">recreation of GOGA's minpaso gadget</p>
       </div>
@@ -44,45 +29,8 @@ const cards = cardsData.default;
   .gadget-title { display: flex; align-items: center; gap: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600;
     background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0.05)); border-bottom: 1px solid rgba(255,255,255,0.2); }
   .gadget-body { padding: 12px 14px; min-height: 118px; }
-  .wotd-face { background: #fff; border-radius: 6px; padding: 10px; font-family: Arial, sans-serif; font-size: 9pt; color: #808080; text-align: center; }
-  .wotd-face img#wotd-card { width: 132px; display: block; margin: 0 auto; }
-  .audiorow { margin: 6px 0 2px; }
-  .audiorow button { font-family: Arial, sans-serif; font-size: 9pt; }
-  .learn { margin: 6px 0 2px; }
-  .tiny { margin: 4px 0 0; font-size: 8pt; }
   .gadget-credit { font-size: 10px; opacity: 0.55; padding: 4px 10px 6px; }
   .minpaso-links { display: flex; gap: 16px; font-size: 14px; margin-bottom: 10px; }
   .minpaso-links a { color: #7fd4ff; }
   .minpaso-note { font-size: 12px; opacity: 0.8; }
 </style>
-<script define:vars={{ cards, base }}>
-  const card = document.getElementById('wotd-card');
-  const playBtn = document.getElementById('wotd-play');
-  const audio = document.getElementById('wotd-audio');
-  const list = cards;
-  let wi = Math.floor(Date.now() / 86400000) % list.length;
-  function show() {
-    const w = list[wi];
-    if (card) {
-      card.src = base + '/aero/wotd/cards/' + w.id + '.png';
-      card.alt = w.roma + ' - ' + w.mean;
-    }
-    if (playBtn) playBtn.parentElement.style.display = w.audio ? '' : 'none';
-    if (audio) { audio.pause(); audio.removeAttribute('src'); }
-  }
-  show();
-  document.getElementById('wotd-next')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    wi = (wi + 1) % list.length;
-    show();
-  });
-  playBtn?.addEventListener('click', () => {
-    const w = list[wi];
-    if (!w.audio || !audio) return;
-    try {
-      audio.src = base + '/aero/wotd/audio/' + w.id + '.mp3';
-      audio.currentTime = 0;
-      audio.play()?.catch?.(() => {});
-    } catch {}
-  });
-</script>
